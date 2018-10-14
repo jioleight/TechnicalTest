@@ -64,7 +64,7 @@ export default class LoginComponent extends React.Component {
       checked: !state.checked,
     }));
     this.setState((state) => ({
-
+      // Save credentials here
     }));
   }
 
