@@ -41,21 +41,20 @@ export default class LoginComponent extends React.Component {
 
   emailValidate(text, type) {
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    if (type === 'email' && text !== '') {
+    if (type === 'email' && text !== '' || this.state.email !== '') {
       if (reg.test(text)) {
         this.setState({
           email: text,
           emailERR: '',
-          emailValid: true
+          emailValid: true,
         });
-        if (this.state.passwordValid){
-          this.setState({ loginValid: true});
+        if (this.state.password === '') {
+          this.setState({loginValid: false});
         } else {
-          this.setState({ loginValid: false});
-        }
+          this.setState({loginValid: true});}
       } else {
           this.setState({
-            email: text,
+            email: '',
             emailERR: 'Incorrect email format ',
             emailValid: false,
             loginValid: false
@@ -63,19 +62,17 @@ export default class LoginComponent extends React.Component {
       }
     } else {
       this.setState({
-        email: text,
         emailERR: '',
         emailValid: true,
-        loginValid: false
       });
     }
   }
 
   passValidate(text, type) {
     if (type === 'password' && text !== '') {
-      if ( text.length < 6) {
+      if (text.length < 6) {
         this.setState({
-          password: text,
+          password: '',
           passERR: 'Password length must be 6-12 characters',
           passwordValid: false,
           loginValid: false
@@ -86,22 +83,18 @@ export default class LoginComponent extends React.Component {
           passERR: '',
           passwordValid: true,
         });
-        if (this.state.emailValid){
-          this.setState({ loginValid: true});
+        if (this.state.email === '') {
+          this.setState({loginValid: false});
         } else {
-          this.setState({ loginValid: false});
-        }
+          this.setState({loginValid: true});}
       }
     } else {
       this.setState({
-        password: text,
         passERR: '',
         passwordValid: true,
-        loginValid: false
       });
-    }
+    } 
   }
-
 
   render() {
     return (
@@ -149,7 +142,10 @@ export default class LoginComponent extends React.Component {
           />
           <TouchableOpacity
             disabled = {!this.state.loginValid? true:false}
-            style = {styles.button}
+            style = {[
+              styles.button, 
+              !this.state.loginValid? styles.buttonStyle:null
+            ]}
             onPress = {this.login}>
               <Text style={styles.buttonText}>Sign In</Text>  
           </TouchableOpacity>
@@ -200,6 +196,9 @@ const styles = StyleSheet.create({
     padding: 10, 
     fontWeight:'bold', 
     fontSize: 14
+  },
+  buttonStyle: {
+    opacity: 0.4
   },
   checkboxStyle: {
     backgroundColor: '#ffffff',
