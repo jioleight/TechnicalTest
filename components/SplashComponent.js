@@ -10,7 +10,7 @@ export default class SplashComponent extends React.Component {
     componentWillMount() {
         setInterval(() =>{
             this.props.navigation.navigate('Home');
-        }, 2000)
+        }, 1000)
     }
     render() {
         return (
