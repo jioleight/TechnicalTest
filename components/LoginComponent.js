@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
   },
   textInputContainer: {
     width: 300,
-    marginBottom: 40
+    marginBottom: 30
   },
   button: {
     backgroundColor: '#714db2',
