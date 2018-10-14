@@ -100,7 +100,7 @@ export default class LoginComponent extends React.Component {
     return (
       <KeyboardAvoidingView style = {styles.container} behavior = "padding" enabled>
         <View>
-          <Image source = {require('../assets/Logo.png')} style={{maxWidth: '100%', maxHeight: '100%', margin: 100}}/>
+          <Image source = {require('../assets/Logo.png')} style={{maxWidth: '100%', maxHeight: '100%', margin: 70}}/>
         </View>
         <View style = {styles.textInputContainer}>
           <Text style = {styles.textLabel}>Email</Text>
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   textErr: {
-    marginBottom:20,
+    marginBottom:30,
     color: 'red',
     fontSize: 12
   },
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
   },
   textInputContainer: {
     width: 300,
-    marginBottom: 30
+    marginBottom: 70
   },
   button: {
     backgroundColor: '#714db2',
@@ -205,7 +205,8 @@ const styles = StyleSheet.create({
   checkboxStyle: {
     backgroundColor: '#ffffff',
     borderWidth: 0,
-    marginTop:-20,
-    alignItems: 'center'
+    marginTop: -20,
+    alignItems: 'center',
+    height: 40
   }
 });
