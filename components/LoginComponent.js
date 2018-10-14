@@ -23,8 +23,8 @@ export default class LoginComponent extends React.Component {
       emailValid: true,
       passwordValid: true,
       loginValid: false,
-      emailERR: '',
-      passERR: '',
+      emailERR: ' ',
+      passERR: ' ',
     }
   }
 
@@ -41,11 +41,11 @@ export default class LoginComponent extends React.Component {
 
   emailValidate(text, type) {
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    if (type === 'email' && text !== '' || this.state.email !== '') {
+    if (type === 'email' && text !== '') {
       if (reg.test(text)) {
         this.setState({
           email: text,
-          emailERR: '',
+          emailERR: ' ',
           emailValid: true,
         });
         if (this.state.password === '') {
@@ -62,25 +62,25 @@ export default class LoginComponent extends React.Component {
       }
     } else {
       this.setState({
-        emailERR: '',
+        emailERR: ' ',
         emailValid: true,
       });
     }
   }
 
   passValidate(text, type) {
-    if (type === 'password' && text !== '') {
+    if (type === 'password' && text !== '' ) {
       if (text.length < 6) {
         this.setState({
           password: '',
-          passERR: 'Password length must be 6-12 characters',
+          passERR: 'Password length must be 6 - 12 characters',
           passwordValid: false,
           loginValid: false
         });
       } else {
         this.setState({
           password: text,
-          passERR: '',
+          passERR: ' ',
           passwordValid: true,
         });
         if (this.state.email === '') {
@@ -90,7 +90,7 @@ export default class LoginComponent extends React.Component {
       }
     } else {
       this.setState({
-        passERR: '',
+        passERR: ' ',
         passwordValid: true,
       });
     } 
@@ -177,6 +177,7 @@ const styles = StyleSheet.create({
     padding: 10, 
     borderColor: '#714db2', 
     borderWidth: 1,
+    borderRadius: 5
   },
   textInputError: {
     borderColor: 'red', 
@@ -189,6 +190,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#714db2',
     alignItems:'center',
+    borderRadius: 5
   },
   buttonText: {
     color:'#fff', 
