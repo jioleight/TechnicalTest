@@ -22,8 +22,6 @@ export default class LoginComponent extends React.Component {
       checked: false,
       emailERR: '',
       passERR: '',
-      defEmail: 'jiofreed01@gmail.com',
-      defPass: '123456',
     }
   }
 
@@ -108,7 +106,7 @@ export default class LoginComponent extends React.Component {
           <TouchableOpacity
             style = {styles.button}
             onPress = {this.login}>
-              <Text style={{color:'#fff', height: 40, padding: 10, fontWeight:'bold', fontSize: 14}}>Sign In</Text>  
+              <Text style={styles.buttonText}>Sign In</Text>  
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -146,5 +144,12 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#714db2',
     alignItems:'center',
+  },
+  buttonText: {
+    color:'#fff', 
+    height: 40, 
+    padding: 10, 
+    fontWeight:'bold', 
+    fontSize: 14
   }
 });
