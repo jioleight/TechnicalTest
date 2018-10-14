@@ -142,7 +142,8 @@ export default class LoginComponent extends React.Component {
             ]}  
           />
           <Text style = {styles.textErr}>{this.state.passERR}</Text>
-          <CheckBox
+          <CheckBox 
+            containerStyle = {styles.checkboxStyle}
             title='Remember Email & Password'
             onPress={this.press}
             checked={this.state.checked}
@@ -201,4 +202,10 @@ const styles = StyleSheet.create({
     fontWeight:'bold', 
     fontSize: 14
   },
+  checkboxStyle: {
+    backgroundColor: '#ffffff',
+    borderWidth: 0,
+    marginTop:-20,
+    alignItems: 'center'
+  }
 });
