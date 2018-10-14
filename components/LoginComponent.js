@@ -20,90 +20,135 @@ export default class LoginComponent extends React.Component {
       email: '',
       password: '',
       checked: false,
+      emailValid: true,
+      passwordValid: true,
+      loginValid: false,
       emailERR: '',
       passERR: '',
     }
   }
 
-  componentDidMount() {
-    this._loadInitialState().done();
-  }
-
-  _loadInitialState = async () => {
-    var value = await AsyncStorage.getItem('user');
-    if (value !== null) {
-      this.props.navigation('Profile');
-    }
-  }
-
   login = () => {
-    if (this.state.email === '') {
-      this.setState((state) => ({
-        emailERR: 'Input email address',
-      }));
-    } else {
-      this.setState((state) => ({
-        emailERR: '',
-      }));
-    }
-    if (this.state.password === '') {
-      this.setState((state) => ({
-        passERR: 'Input password',
-      }));
-    } else {
-      this.setState((state) => ({
-        passERR: '',
-      }));
-    }
+    console.log(this.state.email);
+    console.log(this.state.password);
   }
 
   press = () => {
     this.setState((state) => ({
       checked: !state.checked,
     }));
-    this.setState((state) => ({
-      // Save credentials here
-    }));
   }
+
+  emailValidate(text, type) {
+    const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (type === 'email' && text !== '') {
+      if (reg.test(text)) {
+        this.setState({
+          email: text,
+          emailERR: '',
+          emailValid: true
+        });
+        if (this.state.password !== ''){
+          this.setState({ loginValid: true});
+        } else {
+          this.setState({ loginValid: false});
+        }
+      } else {
+          this.setState({
+            email: text,
+            emailERR: 'Incorrect email format ',
+            emailValid: false,
+            loginValid: false
+          });
+      }
+    } else {
+      this.setState({
+        email: text,
+        emailERR: '',
+        emailValid: true,
+        loginValid: false
+      });
+    }
+  }
+
+  passValidate(text, type) {
+    if (type === 'password' && text !== '') {
+      if ( text.length < 6) {
+        this.setState({
+          password: text,
+          passERR: 'Password length must be 6-12 characters',
+          passwordValid: false,
+          loginValid: false
+        });
+      } else {
+        this.setState({
+          password: text,
+          passERR: '',
+          passwordValid: true,
+          loginValid: true
+        });
+        if (this.state.email !== ''){
+          this.setState({ loginValid: true});
+        } else {
+          this.setState({ loginValid: false});
+        }
+      }
+    } else {
+      this.setState({
+        password: text,
+        passERR: '',
+        passwordValid: true,
+        loginValid: false
+      });
+    }
+  }
+
 
   render() {
     return (
-      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+      <KeyboardAvoidingView style = {styles.container} behavior = "padding" enabled>
         <View>
-          <Image source={require('../assets/Logo.png')} style={{maxWidth: '100%', maxHeight: '100%', margin: 100}}/>
+          <Image source = {require('../assets/Logo.png')} style={{maxWidth: '100%', maxHeight: '100%', margin: 100}}/>
         </View>
-        <View style={styles.textInputContainer}>
-          <Text style={styles.textLabel}>Email</Text>
-          <TextInput placeholder='Input email address' 
-            onChangeText = { (email) => this.setState({email})}
-            keyboardType='email-address' 
-            returnKeyType='next'
-            underlineColorAndroid='transparent'
-            onSubmitEditing={() => this.passwordInput.focus()}
-            autoCapitalize='none'
-            autoCorrect={false}
-            style={styles.textInput}
+        <View style = {styles.textInputContainer}>
+          <Text style = {styles.textLabel}>Email</Text>
+          <TextInput placeholder = 'Input email address' 
+            onChangeText = { (text) => this.emailValidate(text, 'email') }
+            keyboardType = 'email-address' 
+            returnKeyType = 'next'
+            underlineColorAndroid = 'transparent'
+            onSubmitEditing = {() => this.passwordInput.focus()}
+            autoCapitalize = 'none'
+            autoCorrect = {false}
+            style = {[styles.textInput, 
+              !this.state.emailValid? styles.textInputError:null
+            ]}
           />
-          <Text style={styles.textErr}>{this.state.emailERR}</Text>
+          <Text style = {styles.textErr}>{this.state.emailERR}</Text>
 
-          <Text style={styles.textLabel}>Password</Text>
+          <Text style = {styles.textLabel}>Password</Text>
           <TextInput placeholder='Input password' 
-            onChangeText = { (password) => this.setState({password})}
-            autoCapitalize='none'
-            autoCorrect={false}
-            underlineColorAndroid='transparent'
-            secureTextEntry={true}
-            returnKeyType='go'
-            ref={(input) => this.passwordInput = input}
-            style={styles.textInput}  
+            maxLength = {12}
+            onChangeText = { (text) => this.passValidate(text, 'password')}
+            autoCapitalize = 'none'
+            autoCorrect = {false}
+            underlineColorAndroid = 'transparent'
+            secureTextEntry = {true}
+            returnKeyType = 'go'
+            ref = {(input) => this.passwordInput = input}
+            style = {[
+              styles.textInput,  
+              !this.state.passwordValid? styles.textInputError:null
+            ]}  
           />
-          <Text style={styles.textErr}>{this.state.passERR}</Text>
+          <Text style = {styles.textErr}>{this.state.passERR}</Text>
           <CheckBox
             title='Remember Email & Password'
             onPress={this.press}
             checked={this.state.checked}
           />
           <TouchableOpacity
+            disabled = {!this.state.loginValid? true:false}
             style = {styles.button}
             onPress = {this.login}>
               <Text style={styles.buttonText}>Sign In</Text>  
@@ -137,6 +182,10 @@ const styles = StyleSheet.create({
     borderColor: '#714db2', 
     borderWidth: 1,
   },
+  textInputError: {
+    borderColor: 'red', 
+    borderWidth: 1,
+  },
   textInputContainer: {
     width: 300,
     marginBottom: 40
@@ -151,5 +200,5 @@ const styles = StyleSheet.create({
     padding: 10, 
     fontWeight:'bold', 
     fontSize: 14
-  }
+  },
 });
