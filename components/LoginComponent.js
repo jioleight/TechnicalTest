@@ -31,11 +31,9 @@ export default class LoginComponent extends React.Component {
 
   login = () => {
     Alert.alert(
-    '',
-    'Login Successful'
-  )
-    console.log(this.state.email);
-    console.log(this.state.password);
+      '',
+      'Login Successful'
+    )
   }
 
   press = () => {
