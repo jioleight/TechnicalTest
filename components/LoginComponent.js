@@ -33,24 +33,34 @@ export default class LoginComponent extends React.Component {
   }
 
   login = () => {
-    Alert.alert(
-      '',
-      'Login Successful'
-    )
-
     if (this.state.checked) {
       this.saveInfo();
       this.checkInfo();
+      this.setState({
+        email: '',
+        password: '',
+        loginValid: true,
+        checked: true,
+      });
+      Alert.alert(
+        '',
+        'Login Successful \n\nWelcome '+ this.state.email +'!',
+      )
+    } else {
+      this.setState({
+        email: '',
+        password: '',
+        loginValid: false,
+        checked: false,
+      });
+      Alert.alert(
+        '',
+        'Login Successful \n\nWelcome '+ this.state.emailValue +'!',
+      )
+      this.textInput.clear();
+      this.passwordInput.clear();
     }
-    this.setState({
-      email: '',
-      password: '',
-      loginValid: false,
-      checked: false,
-    });
-    this.textInput.clear();
-    this.passwordInput.clear();
-    console.log(this.state.email);
+    this.textInput.focus();
   }
 
   press = () => {
