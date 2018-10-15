@@ -20,6 +20,9 @@ export default class LoginComponent extends React.Component {
     this.state = {
       email: '',
       password: '',
+      emailValue: '',
+      passwordValue: '',
+      dataValid: false,
       checked: false,
       emailValid: true,
       passwordValid: true,
@@ -54,6 +57,7 @@ export default class LoginComponent extends React.Component {
     this.setState((state) => ({
       checked: !state.checked,
     }));
+    console.log(this.state.checked);
   }
 
   saveInfo = async () => {
@@ -70,7 +74,19 @@ export default class LoginComponent extends React.Component {
     try{
       let data = await AsyncStorage.getItem('data');
       let parsedata = JSON.parse(data)
-      console.log(parsedata);
+      if(parsedata !== null){
+        this.setState ({
+          emailValue: parsedata.email,
+          passwordValue: parsedata.password,
+          dataValid: true,
+          loginValid: true,
+        });
+        console.log(this.state.emailValue);
+      } else {
+        this.setState ({
+          dataValid: false,
+        });
+      }
     } catch (error) {
       console.warn(error);
     }
@@ -78,27 +94,31 @@ export default class LoginComponent extends React.Component {
 
   emailValidate(text, type) {
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    this.setState ({
+      dataValid: false,
+    })
     if (type === 'email' && text !== '') {
       if (reg.test(text)) {
-        this.setState({
+        this.setState ({
           email: text,
           emailERR: ' ',
           emailValid: true,
         });
         if (this.state.password === '') {
-          this.setState({loginValid: false});
+          this.setState ({loginValid: false});
         } else {
-          this.setState({loginValid: true});}
+          this.setState ({loginValid: true});}
       } else {
-          this.setState({
-            email: '',
+          this.setState ({
+            email: text,
             emailERR: 'Incorrect email format ',
             emailValid: false,
             loginValid: false
           });
       }
     } else {
-      this.setState({
+      this.setState ({
+        email: text,
         emailERR: ' ',
         emailValid: true,
       });
@@ -106,10 +126,13 @@ export default class LoginComponent extends React.Component {
   }
 
   passValidate(text, type) {
+    this.setState ({
+      dataValid: false,
+    })
     if (type === 'password' && text !== '' ) {
       if (text.length < 6) {
         this.setState({
-          password: '',
+          password: text,
           passERR: 'Password length must be 6 - 12 characters',
           passwordValid: false,
           loginValid: false
@@ -127,6 +150,7 @@ export default class LoginComponent extends React.Component {
       }
     } else {
       this.setState({
+        password: text,
         passERR: ' ',
         passwordValid: true,
       });
@@ -143,6 +167,7 @@ export default class LoginComponent extends React.Component {
           <Text style = {styles.textLabel}>Email</Text>
           <TextInput 
             placeholder = 'Input email address' 
+            value = {!this.state.dataValid? this.state.email:this.state.emailValue}
             ref={input => {this.textInput = input}}
             onChangeText = { (text) => this.emailValidate(text, 'email') }
             keyboardType = 'email-address' 
@@ -160,12 +185,14 @@ export default class LoginComponent extends React.Component {
           <Text style = {styles.textLabel}>Password</Text>
           <TextInput 
             placeholder='Input password' 
+            value = {!this.state.dataValid? this.state.password:this.state.passwordValue}
             maxLength = {12}
             onChangeText = { (text) => this.passValidate(text, 'password')}
             autoCapitalize = 'none'
             autoCorrect = {false}
             underlineColorAndroid = 'transparent'
             secureTextEntry = {true}
+            onSubmitEditing = {() => this.textInput.focus()}
             returnKeyType = 'go'
             ref = {(input) => this.passwordInput = input}
             style = {[
