@@ -34,12 +34,46 @@ export default class LoginComponent extends React.Component {
       '',
       'Login Successful'
     )
+
+    if (this.state.checked) {
+      this.saveInfo();
+      this.checkInfo();
+    }
+    this.setState({
+      email: '',
+      password: '',
+      loginValid: false,
+      checked: false,
+    });
+    this.textInput.clear();
+    this.passwordInput.clear();
+    console.log(this.state.email);
   }
 
   press = () => {
     this.setState((state) => ({
       checked: !state.checked,
     }));
+  }
+
+  saveInfo = async () => {
+    if (this.state.email !== '' && this.state.password !=='') {
+      let data = {
+        email: this.state.email,
+        password: this.state.password
+      }
+      AsyncStorage.setItem('data', JSON.stringify(data));
+    }
+  }
+
+  checkInfo = async () => {
+    try{
+      let data = await AsyncStorage.getItem('data');
+      let parsedata = JSON.parse(data)
+      console.log(parsedata);
+    } catch (error) {
+      console.warn(error);
+    }
   }
 
   emailValidate(text, type) {
@@ -107,7 +141,9 @@ export default class LoginComponent extends React.Component {
         </View>
         <View style = {styles.textInputContainer}>
           <Text style = {styles.textLabel}>Email</Text>
-          <TextInput placeholder = 'Input email address' 
+          <TextInput 
+            placeholder = 'Input email address' 
+            ref={input => {this.textInput = input}}
             onChangeText = { (text) => this.emailValidate(text, 'email') }
             keyboardType = 'email-address' 
             returnKeyType = 'next'
@@ -122,7 +158,8 @@ export default class LoginComponent extends React.Component {
           <Text style = {styles.textErr}>{this.state.emailERR}</Text>
 
           <Text style = {styles.textLabel}>Password</Text>
-          <TextInput placeholder='Input password' 
+          <TextInput 
+            placeholder='Input password' 
             maxLength = {12}
             onChangeText = { (text) => this.passValidate(text, 'password')}
             autoCapitalize = 'none'
