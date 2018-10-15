@@ -5,7 +5,8 @@ import {
   View, 
   Image, 
   KeyboardAvoidingView, 
-  AsyncStorage, 
+  AsyncStorage,
+  Alert, 
   TouchableOpacity 
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
@@ -29,6 +30,10 @@ export default class LoginComponent extends React.Component {
   }
 
   login = () => {
+    Alert.alert(
+    '',
+    'Login Successful'
+  )
     console.log(this.state.email);
     console.log(this.state.password);
   }
@@ -163,7 +168,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   textErr: {
-    marginBottom:30,
+    marginBottom:10,
     color: 'red',
     fontSize: 12
   },
@@ -205,7 +210,7 @@ const styles = StyleSheet.create({
   checkboxStyle: {
     backgroundColor: '#ffffff',
     borderWidth: 0,
-    marginTop: -20,
+    marginTop: -10,
     alignItems: 'center',
     height: 40
   }
