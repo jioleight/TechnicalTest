@@ -10,7 +10,6 @@ import {
   TouchableOpacity 
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
-import { Constants } from 'expo';
 import { CheckBox } from 'react-native-elements';
 
 export default class LoginComponent extends React.Component {
