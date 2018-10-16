@@ -181,6 +181,8 @@ export default class LoginComponent extends React.Component {
             source = {require('../assets/Logo.png')} 
             style={{ 
               resizeMode:'contain',
+              width: wp('70%'),
+              height: hp('70%'),
             }}
           />
         </View>
@@ -256,8 +258,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   viewImg: {
-    width: wp('80%'),
-    height: hp('50%'),
+    width: wp('70%'),
+    height: hp('60%'),
     flex: 0, 
     justifyContent: 'center',
     alignItems: 'center',
@@ -284,7 +286,7 @@ const styles = StyleSheet.create({
   },
   textInputContainer: {
     width: wp('80%'),
-    marginVertical: 30,
+    marginBottom: hp('5%'),
   },
   button: {
     backgroundColor: '#714db2',
@@ -303,7 +305,7 @@ const styles = StyleSheet.create({
   },
   checkboxStyle: {
     backgroundColor: 'transparent',
-    marginTop: 5,
+    marginVertical: 5,
     height: 40,
     alignItems: 'center',
     borderWidth: 0,

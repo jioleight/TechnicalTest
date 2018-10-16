@@ -5,6 +5,10 @@ import {
     View,
     Image
 } from 'react-native';
+import { 
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 export default class SplashComponent extends React.Component {
     componentWillMount() {
@@ -31,8 +35,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     img: {
-        maxWidth: '70%',
-        height: '70%',
+        width: wp('50%'),
+        height: hp('80'),
         resizeMode: 'contain'
     }
 });
