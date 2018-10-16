@@ -181,7 +181,6 @@ export default class LoginComponent extends React.Component {
           />
         </View>
         <View style = {styles.textInputContainer}>
-
           <View>
             <Text style = {styles.textLabel}>Email</Text>
             <TextInput 
@@ -201,7 +200,6 @@ export default class LoginComponent extends React.Component {
             />
             <Text style = {styles.textErr}>{this.state.emailERR}</Text>
           </View>
-
           <View>
             <Text style = {styles.textLabel}>Password</Text>
             <TextInput 
@@ -224,7 +222,6 @@ export default class LoginComponent extends React.Component {
             />
             <Text style = {styles.textErr}>{this.state.passERR}</Text>
           </View>
-
           <CheckBox
             containerStyle = {styles.checkboxStyle}
             title = 'Remember Email & Password'
