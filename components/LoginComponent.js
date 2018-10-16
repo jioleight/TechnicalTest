@@ -1,5 +1,5 @@
 import React from 'react';
-import { 
+import {  
   StyleSheet, 
   Text, 
   View, 
@@ -9,20 +9,22 @@ import {
   Alert, 
   TouchableOpacity 
 } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
-import { CheckBox } from 'react-native-elements';
-import { 
+import {  TextInput } from 'react-native-gesture-handler';
+import {  CheckBox } from 'react-native-elements';
+import {  
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-export default class LoginComponent extends React.Component {
+export default class LoginComponent extends React.Component { 
 
-  constructor(props) {
+  constructor(props) { 
     super(props);
-    this.state = {
+    this.state = { 
       email: '',
       password: '',
+      emailERR: ' ',
+      passERR: ' ',
       emailValue: '',
       passwordValue: '',
       dataValid: false,
@@ -30,18 +32,16 @@ export default class LoginComponent extends React.Component {
       emailValid: true,
       passwordValid: true,
       loginValid: false,
-      emailERR: ' ',
-      passERR: ' ',
     }
   }
   // Validate Email Form //
-  emailValidate(text, type) {
+  emailValidate(text, type) { 
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     this.setState({
       dataValid: false,
     })
-    if (type === 'email' && text !== '') {
-      if (reg.test(text)) {
+    if (type === 'email' && text !== '') { 
+      if (reg.test(text)) { 
         this.setState({
           email: text,
           emailERR: ' ',
@@ -51,11 +51,12 @@ export default class LoginComponent extends React.Component {
             this.state.password === '' || 
             this.state.password.length === 0 ||
             !this.state.passwordValid
-        ) {
-          this.setState({loginValid: false});
-        } else {
-          this.setState({loginValid: true});}
-      } else {
+        ) { 
+          this.setState({loginValid: false });
+        } else { 
+          this.setState({loginValid: true });
+        }
+      } else { 
           this.setState({
             email: text,
             emailERR: 'Incorrect email format ',
@@ -63,7 +64,7 @@ export default class LoginComponent extends React.Component {
             loginValid: false
           });
       }
-    } else {
+    } else { 
       this.setState({
         email: text,
         emailERR: ' ',
@@ -72,19 +73,19 @@ export default class LoginComponent extends React.Component {
     }
   }
   // Validate Password Length //
-  passValidate(text, type) {
+  passValidate(text, type) { 
     this.setState({
       dataValid: false,
     })
-    if (type === 'password' && text !== '' ) {
-      if (text.length < 6) {
+    if (type === 'password' && text !== '' ) { 
+      if (text.length < 6) { 
         this.setState({
           password: text,
           passERR: 'Password length must be 6 - 12 characters',
           passwordValid: false,
           loginValid: false
         });
-      } else {
+      } else { 
         this.setState({
           password: text,
           passERR: ' ',
@@ -94,12 +95,13 @@ export default class LoginComponent extends React.Component {
           this.state.email === '' &&
           this.state.password.length !== 0 ||
           !this.state.emailValid
-        ) {
-          this.setState({loginValid: false});
-        } else {
-          this.setState({loginValid: true});}
+        ) { 
+          this.setState({ loginValid: false });
+        } else { 
+          this.setState({ loginValid: true });
+        }
       }
-    } else {
+    } else { 
       this.setState({
         password: text,
         passERR: ' ',
@@ -108,15 +110,15 @@ export default class LoginComponent extends React.Component {
     } 
   }
   // Remember Email and Password //
-  press = () => {
+  press = () => { 
     this.setState((state) => ({
       checked: !state.checked,
     }));
     console.log(this.state.checked);
   }
   // Login Function //
-  login = () => {
-    if (this.state.checked) {
+  login = () => { 
+    if (this.state.checked) { 
       this.saveInfo();
       this.checkInfo();
       this.setState({
@@ -129,7 +131,7 @@ export default class LoginComponent extends React.Component {
         '',
         'Login Successful \n\nWelcome '+ this.state.email +'!',
       )
-    } else {
+    } else { 
       this.setState({
         email: '',
         password: '',
@@ -146,9 +148,9 @@ export default class LoginComponent extends React.Component {
     this.textInput.focus();
   }
   // Save Credentials //
-  saveInfo = async () => {
-    if (this.state.email !== '' && this.state.password !=='') {
-      let data = {
+  saveInfo = async () => { 
+    if (this.state.email !== '' && this.state.password !=='') { 
+      let data = { 
         email: this.state.email,
         password: this.state.password
       }
@@ -156,11 +158,11 @@ export default class LoginComponent extends React.Component {
     }
   }
   // Check Saved Credentials //
-  checkInfo = async () => {
+  checkInfo = async () => { 
     try{
       let data = await AsyncStorage.getItem('data');
       let parsedata = JSON.parse(data)
-      if (parsedata !== null) {
+      if (parsedata !== null) { 
         this.setState({
           emailValue: parsedata.email,
           passwordValue: parsedata.password,
@@ -168,25 +170,25 @@ export default class LoginComponent extends React.Component {
           loginValid: true,
         });
         console.log(this.state.emailValue);
-      } else {
+      } else { 
         this.setState({
           dataValid: false,
         });
       }
-    } catch (error) {
+    } catch (error) { 
       console.warn(error);
     }
   }
   // Start Here //
-  render() {
+  render() { 
     return (
       <KeyboardAvoidingView 
-        style = {styles.container} 
+        style = { styles.container } 
         behavior = "padding" 
         enabled>
-        <View style = { styles.viewImg }>
+        <View style = {  styles.viewImg }>
           <Image 
-            source = {require('../assets/Logo.png')} 
+            source = { require('../assets/Logo.png') } 
             style={{ 
               resizeMode:'contain',
               width: wp('70%'),
@@ -194,62 +196,62 @@ export default class LoginComponent extends React.Component {
             }}
           />
         </View>
-        <View style = {styles.textInputContainer}>
+        <View style = { styles.textInputContainer }>
           <View>
-            <Text style = {styles.textLabel}>Email</Text>
+            <Text style = { styles.textLabel }>Email</Text>
             <TextInput 
               placeholder = 'Input email address' 
-              value = {!this.state.dataValid? this.state.email:this.state.emailValue}
-              ref={input => {this.textInput = input}}
+              value = { !this.state.dataValid? this.state.email:this.state.emailValue }
+              ref={ input => { this.textInput = input }}
               onChangeText = { (text) => this.emailValidate(text, 'email') }
               keyboardType = 'email-address' 
               returnKeyType = 'next'
               underlineColorAndroid = 'transparent'
-              onSubmitEditing = {() => this.passwordInput.focus()}
+              onSubmitEditing = { () => this.passwordInput.focus() } 
               autoCapitalize = 'none'
-              autoCorrect = {false}
-              style = {[styles.textInput, 
+              autoCorrect = { false }
+              style = { [styles.textInput, 
                 !this.state.emailValid? styles.textInputError:null
               ]}
             />
-            <Text style = {styles.textErr}>{this.state.emailERR}</Text>
+            <Text style = { styles.textErr }>{ this.state.emailERR }</Text>
           </View>
           <View>
-            <Text style = {styles.textLabel}>Password</Text>
+            <Text style = { styles.textLabel }>Password</Text>
             <TextInput 
               placeholder='Input password' 
-              value = {
+              value = { 
                 !this.state.dataValid? this.state.password:this.state.passwordValue
               }
-              maxLength = {12}
-              onChangeText = { (text) => this.passValidate(text, 'password')}
+              maxLength = { 12}
+              onChangeText = { (text) => this.passValidate(text, 'password') }
               autoCapitalize = 'none'
-              autoCorrect = {false}
+              autoCorrect = { false }
               underlineColorAndroid = 'transparent'
-              secureTextEntry = {true}
+              secureTextEntry = { true }
               returnKeyType = 'go'
-              ref = {(input) => this.passwordInput = input}
+              ref = { (input) => this.passwordInput = input }
               style = {[
                 styles.textInput,  
                 !this.state.passwordValid? styles.textInputError:null
               ]}  
             />
-            <Text style = {styles.textErr}>{this.state.passERR}</Text>
+            <Text style = { styles.textErr }>{ this.state.passERR }</Text>
           </View>
           <CheckBox
-            containerStyle = {styles.checkboxStyle}
+            containerStyle = { styles.checkboxStyle }
             title = 'Remember Email & Password'
-            onPress = {this.press}
-            checked = {this.state.checked}
+            onPress = { this.press }
+            checked = { this.state.checked }
           />
           <TouchableOpacity
-            disabled = {!this.state.loginValid? true:false}
+            disabled = { !this.state.loginValid? true:false }
             style = {[
               styles.button, 
               !this.state.loginValid? styles.buttonStyle:null
             ]}
-            onPress = {this.login}>
-              <Text style = {styles.buttonText}>Sign In</Text>  
+            onPress = { this.login }>
+              <Text style = { styles.buttonText }>Sign In</Text>  
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -258,60 +260,60 @@ export default class LoginComponent extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  container: { 
     flex: 1,
     flexDirection: 'column',
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
-  viewImg: {
+  viewImg: { 
     width: wp('70%'),
     height: hp('60%'),
     flex: 0, 
     justifyContent: 'center',
     alignItems: 'center',
   },
-  textErr: {
+  textErr: { 
     color: 'red',
     fontSize: 12
   },
-  textLabel: {
+  textLabel: { 
     color: 'black',
     fontSize:20,
     fontWeight:'bold'
   },
-  textInput: {
+  textInput: { 
     height: 40,
     padding: 10, 
     borderColor: '#714db2', 
     borderWidth: 1,
     borderRadius: 5,
   },
-  textInputError: {
+  textInputError: { 
     borderColor: 'red', 
     borderWidth: 1,
   },
-  textInputContainer: {
+  textInputContainer: { 
     width: wp('80%'),
     marginBottom: hp('5%'),
   },
-  button: {
+  button: { 
     backgroundColor: '#714db2',
     alignItems:'center',
     borderRadius: 5
   },
-  buttonText: {
+  buttonText: { 
     color:'#fff', 
     height: 40, 
     padding: 10, 
     fontWeight:'bold', 
     fontSize: 14
   },
-  buttonStyle: {
+  buttonStyle: { 
     opacity: 0.4
   },
-  checkboxStyle: {
+  checkboxStyle: { 
     backgroundColor: 'transparent',
     marginVertical: 5,
     height: 40,
