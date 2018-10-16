@@ -173,10 +173,14 @@ export default class LoginComponent extends React.Component {
         style = {styles.container} 
         behavior = "padding" 
         enabled>
-        <View>
+        <View style = {{flex: 1, justifyContent: 'flex-end'}}>
           <Image 
             source = {require('../assets/Logo.png')} 
-            style={{maxWidth: '100%', maxHeight: '100%', margin: 70}}
+            style={{
+              maxWidth: '80%', 
+              maxHeight: '80%', 
+              resizeMode:'contain',
+            }}
           />
         </View>
         <View style = {styles.textInputContainer}>
@@ -210,7 +214,6 @@ export default class LoginComponent extends React.Component {
             autoCorrect = {false}
             underlineColorAndroid = 'transparent'
             secureTextEntry = {true}
-            onSubmitEditing = {() => this.textInput.focus()}
             returnKeyType = 'go'
             ref = {(input) => this.passwordInput = input}
             style = {[
@@ -219,7 +222,7 @@ export default class LoginComponent extends React.Component {
             ]}  
           />
           <Text style = {styles.textErr}>{this.state.passERR}</Text>
-          <CheckBox 
+          <CheckBox
             containerStyle = {styles.checkboxStyle}
             title = 'Remember Email & Password'
             onPress = {this.press}
@@ -248,7 +251,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   textErr: {
-    marginBottom:10,
     color: 'red',
     fontSize: 12
   },
@@ -262,7 +264,8 @@ const styles = StyleSheet.create({
     padding: 10, 
     borderColor: '#714db2', 
     borderWidth: 1,
-    borderRadius: 5
+    borderRadius: 5,
+    marginTop: 10,
   },
   textInputError: {
     borderColor: 'red', 
@@ -270,7 +273,9 @@ const styles = StyleSheet.create({
   },
   textInputContainer: {
     width: 300,
-    marginBottom: 70
+    marginVertical: 40,
+    flex: 1,
+    justifyContent: 'space-evenly'
   },
   button: {
     backgroundColor: '#714db2',
@@ -288,10 +293,10 @@ const styles = StyleSheet.create({
     opacity: 0.4
   },
   checkboxStyle: {
-    backgroundColor: '#ffffff',
-    borderWidth: 0,
-    marginTop: -10,
+    backgroundColor: 'transparent',
+    marginTop: 5,
+    height: 40,
     alignItems: 'center',
-    height: 40
+    borderWidth: 0,
   }
 });
