@@ -31,7 +31,79 @@ export default class LoginComponent extends React.Component {
       passERR: ' ',
     }
   }
-
+  // Validate Email Form //
+  emailValidate(text, type) {
+    const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    this.setState({
+      dataValid: false,
+    })
+    if (type === 'email' && text !== '') {
+      if (reg.test(text)) {
+        this.setState({
+          email: text,
+          emailERR: ' ',
+          emailValid: true,
+        });
+        if (this.state.password === '') {
+          this.setState({loginValid: false});
+        } else {
+          this.setState({loginValid: true});}
+      } else {
+          this.setState({
+            email: text,
+            emailERR: 'Incorrect email format ',
+            emailValid: false,
+            loginValid: false
+          });
+      }
+    } else {
+      this.setState({
+        email: text,
+        emailERR: ' ',
+        emailValid: true,
+      });
+    }
+  }
+  // Validate Password Length //
+  passValidate(text, type) {
+    this.setState({
+      dataValid: false,
+    })
+    if (type === 'password' && text !== '' ) {
+      if (text.length < 6) {
+        this.setState({
+          password: text,
+          passERR: 'Password length must be 6 - 12 characters',
+          passwordValid: false,
+          loginValid: false
+        });
+      } else {
+        this.setState({
+          password: text,
+          passERR: ' ',
+          passwordValid: true,
+        });
+        if (this.state.email === '') {
+          this.setState({loginValid: false});
+        } else {
+          this.setState({loginValid: true});}
+      }
+    } else {
+      this.setState({
+        password: text,
+        passERR: ' ',
+        passwordValid: true,
+      });
+    } 
+  }
+  // Remember Email and Password //
+  press = () => {
+    this.setState((state) => ({
+      checked: !state.checked,
+    }));
+    console.log(this.state.checked);
+  }
+  // Login Function //
   login = () => {
     if (this.state.checked) {
       this.saveInfo();
@@ -62,14 +134,7 @@ export default class LoginComponent extends React.Component {
     }
     this.textInput.focus();
   }
-
-  press = () => {
-    this.setState((state) => ({
-      checked: !state.checked,
-    }));
-    console.log(this.state.checked);
-  }
-
+  // Save Credentials //
   saveInfo = async () => {
     if (this.state.email !== '' && this.state.password !=='') {
       let data = {
@@ -79,13 +144,13 @@ export default class LoginComponent extends React.Component {
       AsyncStorage.setItem('data', JSON.stringify(data));
     }
   }
-
+  // Check Saved Credentials //
   checkInfo = async () => {
     try{
       let data = await AsyncStorage.getItem('data');
       let parsedata = JSON.parse(data)
-      if(parsedata !== null){
-        this.setState ({
+      if (parsedata !== null) {
+        this.setState({
           emailValue: parsedata.email,
           passwordValue: parsedata.password,
           dataValid: true,
@@ -93,7 +158,7 @@ export default class LoginComponent extends React.Component {
         });
         console.log(this.state.emailValue);
       } else {
-        this.setState ({
+        this.setState({
           dataValid: false,
         });
       }
@@ -101,77 +166,18 @@ export default class LoginComponent extends React.Component {
       console.warn(error);
     }
   }
-
-  emailValidate(text, type) {
-    const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    this.setState ({
-      dataValid: false,
-    })
-    if (type === 'email' && text !== '') {
-      if (reg.test(text)) {
-        this.setState ({
-          email: text,
-          emailERR: ' ',
-          emailValid: true,
-        });
-        if (this.state.password === '') {
-          this.setState ({loginValid: false});
-        } else {
-          this.setState ({loginValid: true});}
-      } else {
-          this.setState ({
-            email: text,
-            emailERR: 'Incorrect email format ',
-            emailValid: false,
-            loginValid: false
-          });
-      }
-    } else {
-      this.setState ({
-        email: text,
-        emailERR: ' ',
-        emailValid: true,
-      });
-    }
-  }
-
-  passValidate(text, type) {
-    this.setState ({
-      dataValid: false,
-    })
-    if (type === 'password' && text !== '' ) {
-      if (text.length < 6) {
-        this.setState({
-          password: text,
-          passERR: 'Password length must be 6 - 12 characters',
-          passwordValid: false,
-          loginValid: false
-        });
-      } else {
-        this.setState({
-          password: text,
-          passERR: ' ',
-          passwordValid: true,
-        });
-        if (this.state.email === '') {
-          this.setState({loginValid: false});
-        } else {
-          this.setState({loginValid: true});}
-      }
-    } else {
-      this.setState({
-        password: text,
-        passERR: ' ',
-        passwordValid: true,
-      });
-    } 
-  }
-
+  // Start Here //
   render() {
     return (
-      <KeyboardAvoidingView style = {styles.container} behavior = "padding" enabled>
+      <KeyboardAvoidingView 
+        style = {styles.container} 
+        behavior = "padding" 
+        enabled>
         <View>
-          <Image source = {require('../assets/Logo.png')} style={{maxWidth: '100%', maxHeight: '100%', margin: 70}}/>
+          <Image 
+            source = {require('../assets/Logo.png')} 
+            style={{maxWidth: '100%', maxHeight: '100%', margin: 70}}
+          />
         </View>
         <View style = {styles.textInputContainer}>
           <Text style = {styles.textLabel}>Email</Text>
@@ -195,7 +201,9 @@ export default class LoginComponent extends React.Component {
           <Text style = {styles.textLabel}>Password</Text>
           <TextInput 
             placeholder='Input password' 
-            value = {!this.state.dataValid? this.state.password:this.state.passwordValue}
+            value = {
+              !this.state.dataValid? this.state.password:this.state.passwordValue
+            }
             maxLength = {12}
             onChangeText = { (text) => this.passValidate(text, 'password')}
             autoCapitalize = 'none'
@@ -213,9 +221,9 @@ export default class LoginComponent extends React.Component {
           <Text style = {styles.textErr}>{this.state.passERR}</Text>
           <CheckBox 
             containerStyle = {styles.checkboxStyle}
-            title='Remember Email & Password'
-            onPress={this.press}
-            checked={this.state.checked}
+            title = 'Remember Email & Password'
+            onPress = {this.press}
+            checked = {this.state.checked}
           />
           <TouchableOpacity
             disabled = {!this.state.loginValid? true:false}
@@ -224,7 +232,7 @@ export default class LoginComponent extends React.Component {
               !this.state.loginValid? styles.buttonStyle:null
             ]}
             onPress = {this.login}>
-              <Text style={styles.buttonText}>Sign In</Text>  
+              <Text style = {styles.buttonText}>Sign In</Text>  
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
