@@ -11,6 +11,10 @@ import {
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { CheckBox } from 'react-native-elements';
+import { 
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 export default class LoginComponent extends React.Component {
 
@@ -252,7 +256,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   viewImg: {
-    marginBottom: 100,
+    width: wp('80%'),
+    height: hp('50%'),
     flex: 0, 
     justifyContent: 'center',
     alignItems: 'center',
@@ -278,8 +283,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   textInputContainer: {
-    width: '80%',
-    height: 'auto',
+    width: wp('80%'),
     marginVertical: 30,
   },
   button: {
