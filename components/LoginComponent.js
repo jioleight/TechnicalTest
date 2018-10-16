@@ -173,55 +173,59 @@ export default class LoginComponent extends React.Component {
         style = {styles.container} 
         behavior = "padding" 
         enabled>
-        <View style = {{flex: 1, justifyContent: 'flex-end'}}>
+        <View style = { styles.viewImg }>
           <Image 
             source = {require('../assets/Logo.png')} 
-            style={{
-              maxWidth: '80%', 
-              maxHeight: '80%', 
+            style={{ 
               resizeMode:'contain',
             }}
           />
         </View>
         <View style = {styles.textInputContainer}>
-          <Text style = {styles.textLabel}>Email</Text>
-          <TextInput 
-            placeholder = 'Input email address' 
-            value = {!this.state.dataValid? this.state.email:this.state.emailValue}
-            ref={input => {this.textInput = input}}
-            onChangeText = { (text) => this.emailValidate(text, 'email') }
-            keyboardType = 'email-address' 
-            returnKeyType = 'next'
-            underlineColorAndroid = 'transparent'
-            onSubmitEditing = {() => this.passwordInput.focus()}
-            autoCapitalize = 'none'
-            autoCorrect = {false}
-            style = {[styles.textInput, 
-              !this.state.emailValid? styles.textInputError:null
-            ]}
-          />
-          <Text style = {styles.textErr}>{this.state.emailERR}</Text>
 
-          <Text style = {styles.textLabel}>Password</Text>
-          <TextInput 
-            placeholder='Input password' 
-            value = {
-              !this.state.dataValid? this.state.password:this.state.passwordValue
-            }
-            maxLength = {12}
-            onChangeText = { (text) => this.passValidate(text, 'password')}
-            autoCapitalize = 'none'
-            autoCorrect = {false}
-            underlineColorAndroid = 'transparent'
-            secureTextEntry = {true}
-            returnKeyType = 'go'
-            ref = {(input) => this.passwordInput = input}
-            style = {[
-              styles.textInput,  
-              !this.state.passwordValid? styles.textInputError:null
-            ]}  
-          />
-          <Text style = {styles.textErr}>{this.state.passERR}</Text>
+          <View>
+            <Text style = {styles.textLabel}>Email</Text>
+            <TextInput 
+              placeholder = 'Input email address' 
+              value = {!this.state.dataValid? this.state.email:this.state.emailValue}
+              ref={input => {this.textInput = input}}
+              onChangeText = { (text) => this.emailValidate(text, 'email') }
+              keyboardType = 'email-address' 
+              returnKeyType = 'next'
+              underlineColorAndroid = 'transparent'
+              onSubmitEditing = {() => this.passwordInput.focus()}
+              autoCapitalize = 'none'
+              autoCorrect = {false}
+              style = {[styles.textInput, 
+                !this.state.emailValid? styles.textInputError:null
+              ]}
+            />
+            <Text style = {styles.textErr}>{this.state.emailERR}</Text>
+          </View>
+
+          <View>
+            <Text style = {styles.textLabel}>Password</Text>
+            <TextInput 
+              placeholder='Input password' 
+              value = {
+                !this.state.dataValid? this.state.password:this.state.passwordValue
+              }
+              maxLength = {12}
+              onChangeText = { (text) => this.passValidate(text, 'password')}
+              autoCapitalize = 'none'
+              autoCorrect = {false}
+              underlineColorAndroid = 'transparent'
+              secureTextEntry = {true}
+              returnKeyType = 'go'
+              ref = {(input) => this.passwordInput = input}
+              style = {[
+                styles.textInput,  
+                !this.state.passwordValid? styles.textInputError:null
+              ]}  
+            />
+            <Text style = {styles.textErr}>{this.state.passERR}</Text>
+          </View>
+
           <CheckBox
             containerStyle = {styles.checkboxStyle}
             title = 'Remember Email & Password'
@@ -246,9 +250,16 @@ export default class LoginComponent extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column',
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'flex-end',
+  },
+  viewImg: {
+    marginBottom: 100,
+    flex: 0, 
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   textErr: {
     color: 'red',
@@ -265,17 +276,15 @@ const styles = StyleSheet.create({
     borderColor: '#714db2', 
     borderWidth: 1,
     borderRadius: 5,
-    marginTop: 10,
   },
   textInputError: {
     borderColor: 'red', 
     borderWidth: 1,
   },
   textInputContainer: {
-    width: 300,
-    marginVertical: 40,
-    flex: 1,
-    justifyContent: 'space-evenly'
+    width: '80%',
+    height: 'auto',
+    marginVertical: 30,
   },
   button: {
     backgroundColor: '#714db2',
