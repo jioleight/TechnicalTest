@@ -47,7 +47,11 @@ export default class LoginComponent extends React.Component {
           emailERR: ' ',
           emailValid: true,
         });
-        if (this.state.password === '') {
+        if (
+            this.state.password === '' || 
+            this.state.password.length === 0 ||
+            !this.state.passwordValid
+        ) {
           this.setState({loginValid: false});
         } else {
           this.setState({loginValid: true});}
@@ -86,7 +90,11 @@ export default class LoginComponent extends React.Component {
           passERR: ' ',
           passwordValid: true,
         });
-        if (this.state.email === '') {
+        if (
+          this.state.email === '' &&
+          this.state.password.length !== 0 ||
+          !this.state.emailValid
+        ) {
           this.setState({loginValid: false});
         } else {
           this.setState({loginValid: true});}
