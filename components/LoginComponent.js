@@ -7,11 +7,11 @@ import {
   KeyboardAvoidingView, 
   AsyncStorage,
   Alert, 
-  CheckBox,
   TouchableOpacity 
 } from 'react-native';
-import {  TextInput } from 'react-native-gesture-handler';
-//import {  CheckBox } from 'react-native-elements';
+import { CheckBox} from 'react-native-elements';
+import FlashMessage from 'react-native-flash-message';
+import { showMessage } from 'react-native-flash-message';
 import {  
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -133,10 +133,6 @@ export default class LoginComponent extends React.Component {
         loginValid: true,
         checked: true,
       });
-      Alert.alert(
-        '',
-        'Login Successful \n\nWelcome '+ this.state.email +'!',
-      )
     } else { 
       this.setState({
         email: '',
@@ -144,10 +140,10 @@ export default class LoginComponent extends React.Component {
         loginValid: false,
         checked: false,
       });
-      Alert.alert(
-        '',
-        'Login Successful \n\nWelcome '+ this.state.emailValue +'!',
-      )
+      showMessage({
+        message: 'Login Successful!',
+        type: 'success'
+      })
       this.textInput.clear();
       this.passwordInput.clear();
     }
@@ -192,7 +188,7 @@ export default class LoginComponent extends React.Component {
         style = { styles.container } 
         behavior = "padding" 
         enabled>
-        <View style = {  styles.viewImg }>
+        <View style = { styles.viewImg }>
           <Image 
             source = { require('../assets/Logo.png') } 
             style={{ 
@@ -203,27 +199,27 @@ export default class LoginComponent extends React.Component {
           />
         </View>
         <View style = { styles.textInputContainer }>
-        <TextField
-          ref = { input => { this.textInput = input}}
-          keyboardType = 'email-address'
-          autoCorrect = {false}
-          autoCapitalize = 'none'
-          onChangeText = { (text) => this.emailValidate(text, 'email') }
-          label = 'Email Address'
-          returnKeyType = 'next'
-          error = { !this.state.emailValid? this.state.emailERR : null }
-        />
+          <TextField
+            ref = { input => { this.textInput = input}}
+            keyboardType = 'email-address'
+            autoCorrect = {false}
+            autoCapitalize = 'none'
+            onChangeText = { (text) => this.emailValidate(text, 'email') }
+            label = 'Email Address'
+            returnKeyType = 'next'
+            error = { !this.state.emailValid? this.state.emailERR : null }
+          />
 
-        <TextField
-          ref = { (input) => this.passwordInput = input }
-          autoCorrect = {false}
-          autoCapitalize = 'none'
-          secureTextEntry = {true}
-          onChangeText = { (text) => this.passValidate(text, 'password') }
-          label = 'Password'
-          returnKeyType = 'go'
-          error = { !this.state.passwordValid? this.state.passERR : null }
-        />
+          <TextField
+            ref = { (input) => this.passwordInput = input }
+            autoCorrect = {false}
+            autoCapitalize = 'none'
+            secureTextEntry = {true}
+            onChangeText = { (text) => this.passValidate(text, 'password') }
+            label = 'Password'
+            returnKeyType = 'go'
+            error = { !this.state.passwordValid? this.state.passERR : null }
+          />
           {/* <View>
             <Text style = { styles.textLabel }>Email</Text>
             <TextInput 
@@ -269,6 +265,9 @@ export default class LoginComponent extends React.Component {
             containerStyle = { styles.checkboxStyle }
             title = 'Remember Email & Password'
             onPress = { this.press }
+            iconType = 'material-community'
+            checkedIcon = 'checkbox-marked'
+            uncheckedIcon = 'checkbox-blank-outline'
             checked = { this.state.checked }
           />
           <TouchableOpacity
@@ -281,6 +280,7 @@ export default class LoginComponent extends React.Component {
               <Text style = { styles.buttonText }>Sign In</Text>  
           </TouchableOpacity>
         </View>
+        <FlashMessage position = 'top' floating = { true } icon = 'auto'/>
       </KeyboardAvoidingView>
     );
   }
@@ -295,8 +295,9 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   viewImg: { 
-    width: wp('70%'),
-    height: hp('60%'),
+    /* width: wp('70%'),
+    height: hp('60%'), */
+    marginTop: hp('40%'),
     flex: 0, 
     justifyContent: 'center',
     alignItems: 'center',
@@ -323,7 +324,7 @@ const styles = StyleSheet.create({
   },
   textInputContainer: { 
     width: wp('80%'),
-    marginBottom: hp('5%'),
+    marginBottom: hp('10%'), 
   },
   button: { 
     backgroundColor: '#714db2',
