@@ -7,14 +7,18 @@ import {
   KeyboardAvoidingView, 
   AsyncStorage,
   Alert, 
+  CheckBox,
   TouchableOpacity 
 } from 'react-native';
 import {  TextInput } from 'react-native-gesture-handler';
-import {  CheckBox } from 'react-native-elements';
+//import {  CheckBox } from 'react-native-elements';
 import {  
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import { TextField } from 'react-native-material-textfield';
+import { RaisedTexButton as MaterialButton } from 'react-native-material-buttons';
+
 
 export default class LoginComponent extends React.Component { 
 
@@ -199,7 +203,28 @@ export default class LoginComponent extends React.Component {
           />
         </View>
         <View style = { styles.textInputContainer }>
-          <View>
+        <TextField
+          ref = { input => { this.textInput = input}}
+          keyboardType = 'email-address'
+          autoCorrect = {false}
+          autoCapitalize = 'none'
+          onChangeText = { (text) => this.emailValidate(text, 'email') }
+          label = 'Email Address'
+          returnKeyType = 'next'
+          error = { !this.state.emailValid? this.state.emailERR : null }
+        />
+
+        <TextField
+          ref = { (input) => this.passwordInput = input }
+          autoCorrect = {false}
+          autoCapitalize = 'none'
+          secureTextEntry = {true}
+          onChangeText = { (text) => this.passValidate(text, 'password') }
+          label = 'Password'
+          returnKeyType = 'go'
+          error = { !this.state.passwordValid? this.state.passERR : null }
+        />
+          {/* <View>
             <Text style = { styles.textLabel }>Email</Text>
             <TextInput 
               placeholder = 'Input email address' 
@@ -239,7 +264,7 @@ export default class LoginComponent extends React.Component {
               ]}  
             />
             <Text style = { styles.textErr }>{ this.state.passERR }</Text>
-          </View>
+          </View> */}
           <CheckBox
             containerStyle = { styles.checkboxStyle }
             title = 'Remember Email & Password'
