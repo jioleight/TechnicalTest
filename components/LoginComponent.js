@@ -237,47 +237,6 @@ export default class LoginComponent extends React.Component {
             returnKeyType = 'go'
             error = { !this.state.passwordValid? this.state.passERR : null }
           />
-          {/* <View>
-            <Text style = { styles.textLabel }>Email</Text>
-            <TextInput 
-              placeholder = 'Input email address' 
-              value = { !this.state.dataValid? this.state.email:this.state.emailValue }
-              ref={ input => { this.textInput = input }}
-              onChangeText = { (text) => this.emailValidate(text, 'email') }
-              keyboardType = 'email-address' 
-              returnKeyType = 'next'
-              underlineColorAndroid = 'transparent'
-              onSubmitEditing = { () => this.passwordInput.focus() } 
-              autoCapitalize = 'none'
-              autoCorrect = { false }
-              style = { [styles.textInput, 
-                !this.state.emailValid? styles.textInputError:null
-              ]}
-            />
-            <Text style = { styles.textErr }>{ this.state.emailERR }</Text>
-          </View>
-          <View>
-            <Text style = { styles.textLabel }>Password</Text>
-            <TextInput 
-              placeholder='Input password' 
-              value = { 
-                !this.state.dataValid? this.state.password:this.state.passwordValue
-              }
-              maxLength = { 12}
-              onChangeText = { (text) => this.passValidate(text, 'password') }
-              autoCapitalize = 'none'
-              autoCorrect = { false }
-              underlineColorAndroid = 'transparent'
-              secureTextEntry = { true }
-              returnKeyType = 'go'
-              ref = { (input) => this.passwordInput = input }
-              style = {[
-                styles.textInput,  
-                !this.state.passwordValid? styles.textInputError:null
-              ]}  
-            />
-            <Text style = { styles.textErr }>{ this.state.passERR }</Text>
-          </View> */}
           <CheckBox
             containerStyle = { styles.checkboxStyle }
             title = 'Remember Email & Password'
@@ -333,26 +292,6 @@ const styles = StyleSheet.create({
     flex: 1, 
     justifyContent: 'flex-end',
     alignItems: 'center',
-  },
-  textErr: { 
-    color: 'red',
-    fontSize: 12
-  },
-  textLabel: { 
-    color: 'black',
-    fontSize:20,
-    fontWeight:'bold'
-  },
-  textInput: { 
-    height: 40,
-    padding: 10, 
-    borderColor: '#714db2', 
-    borderWidth: 1,
-    borderRadius: 5,
-  },
-  textInputError: { 
-    borderColor: 'red', 
-    borderWidth: 1,
   },
   textInputContainer: { 
     width: wp('80%'),
