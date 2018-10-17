@@ -17,8 +17,6 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import { TextField } from 'react-native-material-textfield';
-import { RaisedTexButton as MaterialButton } from 'react-native-material-buttons';
-
 
 export default class LoginComponent extends React.Component { 
 
