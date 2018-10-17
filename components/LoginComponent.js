@@ -34,6 +34,9 @@ export default class LoginComponent extends React.Component {
       loginValid: false,
     }
   }
+  componentDidMount() {
+    this.checkInfo();
+  }  
   // Validate Email Form //
   emailValidate(text, type) { 
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -120,7 +123,6 @@ export default class LoginComponent extends React.Component {
   login = () => { 
     if (this.state.checked) { 
       this.saveInfo();
-      this.checkInfo();
       this.setState({
         email: '',
         password: '',
