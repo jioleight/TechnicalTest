@@ -1,7 +1,6 @@
 import React from 'react';
 import {
     StyleSheet,
-    Text,
     View,
     Image
 } from 'react-native';
@@ -13,7 +12,7 @@ import {
 export default class SplashComponent extends React.Component {
     componentWillMount() {
         setInterval(() =>{
-            this.props.navigation.navigate('Home');
+            this.props.navigation.navigate('Profile');
         }, 1000)
     }
     render() {

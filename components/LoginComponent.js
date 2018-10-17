@@ -9,6 +9,7 @@ import {
   AsyncStorage,
   TouchableOpacity,
 } from 'react-native';
+import { createStackNavigator } from 'react-navigation';
 import { CheckBox} from 'react-native-elements';
 import FlashMessage from 'react-native-flash-message';
 import { showMessage } from 'react-native-flash-message';
@@ -19,7 +20,6 @@ import {
 import { TextField } from 'react-native-material-textfield';
 
 export default class LoginComponent extends React.Component { 
-
   constructor(props) { 
     super(props);
     this.state = { 
@@ -42,7 +42,7 @@ export default class LoginComponent extends React.Component {
     this.checkInfo();
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
-  }  
+  }
 
   _keyboardDidShow = () => {
     this.setState({keyboardOpen: true, displayIMG: false});
@@ -156,13 +156,7 @@ export default class LoginComponent extends React.Component {
       this.textInput.clear();
       this.passwordInput.clear();
     }
-    showMessage({
-      message: 'Login Successful!',
-      type: 'success',
-      width: wp('50%'),
-      position: 'center',
-    })
-    this.forceUpdate();
+    this.props.navigation.navigate('Profile');
   }
   // Save Credentials //
   saveInfo = async () => { 
@@ -195,6 +189,7 @@ export default class LoginComponent extends React.Component {
     } catch (error) { 
       console.warn(error);
     }
+    this.forceUpdate();
   }
   // Start Here //
   render() { 
@@ -256,10 +251,6 @@ export default class LoginComponent extends React.Component {
               <Text style = { styles.buttonText }>Sign In</Text>  
           </TouchableOpacity>
         </View>
-        <FlashMessage
-          floating = { true } 
-          icon = 'auto' 
-          style = {{ alignItems: 'center'}}/>
       </KeyboardAvoidingView>
     );
   }
