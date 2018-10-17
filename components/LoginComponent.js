@@ -4,6 +4,7 @@ import {
   Text, 
   View, 
   Image, 
+  Keyboard,
   KeyboardAvoidingView, 
   AsyncStorage,
   Alert, 
@@ -36,11 +37,23 @@ export default class LoginComponent extends React.Component {
       emailValid: true,
       passwordValid: true,
       loginValid: false,
+      displayIMG: true,
+      keyboardOpen: false,
     }
   }
   componentDidMount() {
     this.checkInfo();
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
   }  
+
+  _keyboardDidShow = () => {
+    this.setState({keyboardOpen: true, displayIMG: false});
+  }
+
+  _keyboardDidHide = () => {
+    this.setState({keyboardOpen: false, displayIMG: true});
+  }
   // Validate Email Form //
   emailValidate(text, type) { 
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -132,22 +145,27 @@ export default class LoginComponent extends React.Component {
         password: '',
         loginValid: true,
         checked: true,
+        dataValid: true,
       });
     } else { 
+      this.textInput.focus();
       this.setState({
         email: '',
         password: '',
         loginValid: false,
         checked: false,
+        dataValid: false,
       });
-      showMessage({
-        message: 'Login Successful!',
-        type: 'success'
-      })
       this.textInput.clear();
       this.passwordInput.clear();
     }
-    this.textInput.focus();
+    showMessage({
+      message: 'Login Successful!',
+      type: 'success',
+      width: wp('50%'),
+      position: 'center',
+    })
+    this.forceUpdate();
   }
   // Save Credentials //
   saveInfo = async () => { 
@@ -188,30 +206,32 @@ export default class LoginComponent extends React.Component {
         style = { styles.container } 
         behavior = "padding" 
         enabled>
-        <View style = { styles.viewImg }>
+        <View style = { styles.containerImg }>
           <Image 
             source = { require('../assets/Logo.png') } 
-            style={{ 
-              resizeMode:'contain',
-              width: wp('70%'),
-              height: hp('70%'),
-            }}
+            style={ !this.state.displayIMG? styles.hideIMG:styles.showImg }
           />
         </View>
         <View style = { styles.textInputContainer }>
           <TextField
             ref = { input => { this.textInput = input}}
+            value = { !this.state.dataValid? this.state.email:this.state.emailValue }
             keyboardType = 'email-address'
             autoCorrect = {false}
             autoCapitalize = 'none'
-            onChangeText = { (text) => this.emailValidate(text, 'email') }
+            onSubmitEditing = { () => this.passwordInput.focus() }
+            onChangeText = { 
+              (text) => this.emailValidate(text, 'email') 
+            }
+            onFocus = { () => this.setState({ displayIMG: true })}
             label = 'Email Address'
             returnKeyType = 'next'
             error = { !this.state.emailValid? this.state.emailERR : null }
           />
-
+          
           <TextField
             ref = { (input) => this.passwordInput = input }
+            value = { !this.state.dataValid? this.state.password:this.state.passwordValue }
             autoCorrect = {false}
             autoCapitalize = 'none'
             secureTextEntry = {true}
@@ -280,7 +300,10 @@ export default class LoginComponent extends React.Component {
               <Text style = { styles.buttonText }>Sign In</Text>  
           </TouchableOpacity>
         </View>
-        <FlashMessage position = 'top' floating = { true } icon = 'auto'/>
+        <FlashMessage
+          floating = { true } 
+          icon = 'auto' 
+          style = {{ alignItems: 'center'}}/>
       </KeyboardAvoidingView>
     );
   }
@@ -292,14 +315,26 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
+    height: hp('100%'),
+    width: wp('100%')
   },
-  viewImg: { 
-    /* width: wp('70%'),
-    height: hp('60%'), */
-    marginTop: hp('40%'),
-    flex: 0, 
-    justifyContent: 'center',
+  showImg: { 
+    resizeMode:'contain',
+    width: '70%',
+    height: '70%',
+    alignItems: 'center'
+  },
+  hideIMG: {
+    resizeMode:'contain',
+    width: 0,
+    height: 0,
+  },
+  containerImg: { 
+    width: wp('100%%'),
+    height: hp('60%'),
+    flex: 1, 
+    justifyContent: 'flex-end',
     alignItems: 'center',
   },
   textErr: { 
@@ -324,7 +359,11 @@ const styles = StyleSheet.create({
   },
   textInputContainer: { 
     width: wp('80%'),
+    height: hp('40%'),
+    backgroundColor: '#fff',
     marginBottom: hp('10%'), 
+    flex: 0,
+    justifyContent: 'flex-end',
   },
   button: { 
     backgroundColor: '#714db2',
