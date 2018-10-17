@@ -7,8 +7,7 @@ import {
   Keyboard,
   KeyboardAvoidingView, 
   AsyncStorage,
-  Alert, 
-  TouchableOpacity 
+  TouchableOpacity,
 } from 'react-native';
 import { CheckBox} from 'react-native-elements';
 import FlashMessage from 'react-native-flash-message';
@@ -368,7 +367,8 @@ const styles = StyleSheet.create({
   button: { 
     backgroundColor: '#714db2',
     alignItems:'center',
-    borderRadius: 5
+    borderRadius: 5,
+    marginTop: 10,
   },
   buttonText: { 
     color:'#fff', 
