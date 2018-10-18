@@ -5,18 +5,25 @@ import LoginComponent from './components/LoginComponent';
 import ProfileComponent from './components/ProfileComponent';
 
 const Application = createStackNavigator({
-  /* Splash: { screen: SplashComponent}, */
-  Home: { 
-    screen: LoginComponent 
-    },
-  Profile: { 
-    screen: ProfileComponent
-    },
-  }, 
-        {
+  /* Splash: { 
+    screen: SplashComponent,
     navigationOptions: {
-      header: null,
-    }
+        header: null,
+      },
+  }, */
+  Home: { 
+    screen: LoginComponent,
+    navigationOptions: {
+        header: null,
+      },
+  },
+  Profile: { 
+    screen: ProfileComponent,
+    navigationOptions: ({ navigation }) => ({
+      title: 'List of users',
+      
+    }),
+  },
 });
 
 export default class myApp extends React.Component {
