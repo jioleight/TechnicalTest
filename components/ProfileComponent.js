@@ -1,6 +1,4 @@
 import React from 'react';
-import FlashMessage from 'react-native-flash-message';
-import { showMessage } from 'react-native-flash-message';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { List, ListItem, colors } from 'react-native-elements';
 import {
@@ -16,7 +14,7 @@ import {
     AsyncStorage,
     TouchableOpacity
 } from 'react-native';
-import { TextField } from 'react-native-material-textfield';
+import { NavigationActions } from 'react-navigation';
 
 var statusBarHeight = getStatusBarHeight();
 
@@ -30,7 +28,6 @@ export default class ProfileComponent extends React.Component {
 
     componentDidMount() {
         this.makeRemoteRequest();
-        this.forceUpdate();
     }
     makeRemoteRequest = () => {
         const { page, seed } = this.state;
@@ -49,52 +46,39 @@ export default class ProfileComponent extends React.Component {
             .catch(error => {
                 this.setState({ error, loading: false });
             });
-        console.log(this.state.dataUsers);
-    }
-    logout = () =>{
-        goBack('Home');
     }
     render() {
         return (
-            <KeyboardAvoidingView style={styles.container} behavior='padding' enabled>
-                <View style={styles.userContainer}>
-                    <View style={styles.headerContainer}>
-                        <Text style={styles.textTitle}>List of users</Text>
-                        <TouchableOpacity 
-                            style={styles.logoutButton}
-                            onPress = { this.logout() }>
-                            <Text style={{ color: 'white' }}>Logout</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <List>
-                        <FlatList
-                            data={this.state.dataUsers}
-                            renderItem={({ item }) => (
-                                <ListItem
-                                    roundAvatar
-                                    title={`${item.name.first} ${item.name.last}`}
-                                    subtitle={item.email}
-                                    avatar={{ uri: item.picture.thumbnail }}
-                                />
-                            )}
-                            keyExtractor={item => item.email}
-                        />
-                    </List>
-                </View>
-            </KeyboardAvoidingView>
+            <View style={styles.container}>
+                <List containerStyle = {{marginTop: 0}}>
+                    <FlatList
+                        data={this.state.dataUsers}
+                        renderItem={({ item }) => (
+                            <ListItem
+                                roundAvatar
+                                title={`${item.name.first} ${item.name.last}`}
+                                subtitle={item.email}
+                                avatar={{ uri: item.picture.thumbnail }}
+                            />
+                        )}
+                        keyExtractor={item => item.email}
+                    />
+                </List>
+            </View>
         );
     }
 }
+const backAction = NavigationActions.back({
+    key: 'Home',
+});
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        maxHeight: hp('100%'),
-        maxWidth: wp('100%'),
+        flex: 0,
+        height: hp('100%'),
+        width: wp('100%'),
         backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: statusBarHeight,
+        justifyContent: 'flex-start'
     },
     headerContainer: {
         flex: 0,
@@ -108,7 +92,6 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         height: hp('100%'),
         width: wp('100%'),
-        padding: 10,
     },
     logoutButton: {
         padding: 5,

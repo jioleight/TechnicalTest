@@ -17,6 +17,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import { TextField } from 'react-native-material-textfield';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 
 export default class LoginComponent extends React.Component {
   constructor(props) {
@@ -30,6 +31,7 @@ export default class LoginComponent extends React.Component {
       passwordValue: '',
       dataValid: false,
       checked: false,
+      rememberLogin: false,
       emailValid: true,
       passwordValid: true,
       loginValid: false,
@@ -40,10 +42,28 @@ export default class LoginComponent extends React.Component {
     }
   }
   componentDidMount() {
+    this.forceUpdate();
     this.checkInfo();
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
   }
+
+  componentWillUnmount() {
+    clearTimeout(this.waitTime);
+  }
+
+  waitTime() {
+    showMessage({
+      message: 'Login Success!',
+      description: 'Welcome ' + this.state.emailValue,
+      type: 'success',
+      position: 'center'
+    })
+    setTimeout(() => {
+      this.props.navigation.navigate('Profile');
+    }, 3500)
+  }
+
 
   _keyboardDidShow = () => {
     this.setState({ keyboardOpen: true, displayIMG: false });
@@ -132,140 +152,156 @@ export default class LoginComponent extends React.Component {
     this.setState((state) => ({
       checked: !state.checked,
     }));
-    console.log(this.state.checked);
   }
   // Login Function //
   login = () => {
-    if (this.state.checked) {
-      this.saveInfo();
+    if (!this.state.checked) {
       this.setState({
         email: '',
         password: '',
         loginValid: true,
-        checked: true,
         dataValid: true,
       });
     } else {
-      this.textInput.focus();
+      this.saveInfo();
       this.setState({
         email: '',
         password: '',
         loginValid: false,
-        checked: false,
         dataValid: false,
       });
       this.textInput.clear();
       this.passwordInput.clear();
     }
-    showMessage({
-        message: 'Login Successful!',
-        type: 'success',
-        position: 'center',
-    });
-    this.props.navigation.navigate('Profile');
+    this.waitTime();
   }
-  // Save Credentials //
-  saveInfo = async () => {
-    if (this.state.email !== '' && this.state.password !== '') {
-      let data = {
-        email: this.state.email,
-        password: this.state.password
+  valueTextField(type) {
+    if (type === 'email') {
+      if (this.state.dataValid) {
+        if (!this.state.checked) {
+          return (this.state.email)
+        } else {
+          return (this.state.emailValue)
+        }
       }
-      AsyncStorage.setItem('data', JSON.stringify(data));
+    } else {
+      if (this.state.dataValid) {
+        if (!this.state.checked) {
+          return (this.state.password)
+        } else {
+          return (this.state.passwordValue)
+        }
+      }
     }
   }
-  // Check Saved Credentials //
-  checkInfo = async () => {
-    try {
-      let data = await AsyncStorage.getItem('data');
-      let parsedata = JSON.parse(data)
-      if (parsedata !== null) {
+
+// Save Credentials //
+saveInfo = async () => {
+  let data = {
+    email: this.state.email,
+    password: this.state.password,
+    rememberLogin: this.state.checked,
+  }
+  AsyncStorage.setItem('data', JSON.stringify(data));
+  console.log(this.state.checked);
+}
+// Check Saved Credentials //
+checkInfo = async () => {
+  try {
+    let data = await AsyncStorage.getItem('data');
+    let parsedata = JSON.parse(data)
+    if (parsedata !== null) {
+      if (parsedata.rememberLogin) {
         this.setState({
           emailValue: parsedata.email,
           passwordValue: parsedata.password,
-          dataValid: true,
+          checked: parsedata.rememberLogin,
           loginValid: true,
-        });
-        console.info('Check success!')
-      } else {
-        this.setState({
-          dataValid: false,
+          dataValid: true,
         });
       }
-    } catch (error) {
-      console.warn(error);
+    } else {
+      this.setState({
+        dataValid: false,
+        loginValid: false,
+      });
     }
-    this.forceUpdate();
+  } catch (error) {
+    console.warn(error);
   }
-  // Start Here //
-  render() {
-    return (
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior="padding"
-        enabled>
-        <View style={styles.containerImg}>
-          <Image 
-            source = { require('../assets/Logo.png') } 
-            style={ !this.state.displayIMG? styles.hideIMG:styles.showImg }
-          />
-        </View>
-        <View style={styles.textInputContainer}>
-          <TextField
-            ref={input => { this.textInput = input }}
-            value={!this.state.dataValid ? this.state.email : this.state.emailValue}
-            keyboardType='email-address'
-            autoCorrect={false}
-            autoCapitalize='none'
-            onSubmitEditing={() => this.passwordInput.focus()}
-            onChangeText={
-              (text) => this.emailValidate(text, 'email')
-            }
-            onFocus={() => this.setState({ displayIMG: true })}
-            label='Email Address'
-            returnKeyType='next'
-            error={!this.state.emailValid ? this.state.emailERR : null}
-          />
-
-          <TextField
-            ref={(input) => this.passwordInput = input}
-            value={!this.state.dataValid ? this.state.password : this.state.passwordValue}
-            autoCorrect={false}
-            autoCapitalize='none'
-            secureTextEntry={true}
-            onChangeText={(text) => this.passValidate(text, 'password')}
-            label='Password'
-            returnKeyType='go'
-            error={!this.state.passwordValid ? this.state.passERR : null}
-          />
-          <CheckBox
-            containerStyle={styles.checkboxStyle}
-            title='Remember Email & Password'
-            onPress={this.press}
-            iconType='material-community'
-            checkedIcon='checkbox-marked'
-            uncheckedIcon='checkbox-blank-outline'
-            checked={this.state.checked}
-          />
-          <TouchableOpacity
-            disabled={!this.state.loginValid ? true : false}
-            style={[
-              styles.button,
-              !this.state.loginValid ? styles.buttonStyle : null
-            ]}
-            onPress={this.login}>
-            <Text style={styles.buttonText}>Sign In</Text>
-          </TouchableOpacity>
-        </View>
-        <FlashMessage
-          floating={true}
-          icon='auto'
-          style={{ alignItems: 'center' }}
-          hideOnPress={false}
+  this.forceUpdate();
+  console.log('remember: ',this.state.rememberLogin)
+  console.log('valid: ', this.state.dataValid)
+}
+// Start Here //
+render() {
+  return (
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior="padding"
+      enabled>
+      <View style={styles.containerImg}>
+        <Image
+          source={require('../assets/Logo.png')}
+          style={!this.state.displayIMG ? styles.hideIMG : styles.showImg}
         />
-      </KeyboardAvoidingView>
-    );
-  }
+      </View>
+      <View style={styles.textInputContainer}>
+        <TextField
+          ref={input => { this.textInput = input }}
+          value={this.valueTextField('email')}
+          keyboardType='email-address'
+          autoCorrect={false}
+          autoCapitalize='none'
+          onSubmitEditing={() => this.passwordInput.focus()}
+          onChangeText={
+            (text) => this.emailValidate(text, 'email')
+          }
+          onFocus={() => this.setState({ displayIMG: false })}
+          label='Email Address'
+          returnKeyType='next'
+          error={!this.state.emailValid ? this.state.emailERR : null}
+        />
+
+        <TextField
+          ref={(input) => this.passwordInput = input}
+          value={this.valueTextField('password')}
+          autoCorrect={false}
+          autoCapitalize='none'
+          secureTextEntry={true}
+          onChangeText={(text) => this.passValidate(text, 'password')}
+          label='Password'
+          returnKeyType='go'
+          error={!this.state.passwordValid ? this.state.passERR : null}
+        />
+        <CheckBox
+          containerStyle={styles.checkboxStyle}
+          title='Remember Email & Password'
+          onPress={this.press}
+          iconType='material-community'
+          checkedIcon='checkbox-marked'
+          uncheckedIcon='checkbox-blank-outline'
+          checked={this.state.checked}
+        />
+        <TouchableOpacity
+          disabled={!this.state.loginValid ? true : false}
+          style={[
+            styles.button,
+            !this.state.loginValid ? styles.buttonStyle : null
+          ]}
+          onPress={this.login}>
+          <Text style={styles.buttonText}>Sign In</Text>
+        </TouchableOpacity>
+      </View>
+      <FlashMessage
+        floating={true}
+        icon='auto'
+        style={{ alignItems: 'center' }}
+        hideOnPress={false}
+      />
+    </KeyboardAvoidingView>
+  );
+}
 }
 
 const styles = StyleSheet.create({
@@ -276,7 +312,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     height: hp('100%'),
-    width: wp('100%')
+    width: wp('100%'),
+    marginTop: getStatusBarHeight(),
   },
   showImg: {
     resizeMode: 'contain',
@@ -285,15 +322,15 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   hideIMG: {
-    resizeMode: 'contain',
-    width: 0,
-    height: 0,
+    resizeMode: 'center',
+    width: '0%',
+    height: '0%',
   },
   containerImg: {
     width: wp('100%%'),
     height: hp('60%'),
     flex: 1,
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   textInputContainer: {
@@ -302,7 +339,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginBottom: hp('10%'),
     flex: 0,
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
   },
   button: {
     backgroundColor: '#714db2',
