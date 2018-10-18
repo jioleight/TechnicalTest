@@ -1,5 +1,4 @@
 import React from 'react';
-import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { List, ListItem, colors } from 'react-native-elements';
 import {
     widthPercentageToDP as wp,
@@ -7,16 +6,11 @@ import {
 } from 'react-native-responsive-screen';
 import {
     StyleSheet,
-    Text,
     View,
     FlatList,
-    KeyboardAvoidingView,
     AsyncStorage,
-    TouchableOpacity
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
-
-var statusBarHeight = getStatusBarHeight();
 
 export default class ProfileComponent extends React.Component {
     constructor(props) {
@@ -28,6 +22,10 @@ export default class ProfileComponent extends React.Component {
 
     componentDidMount() {
         this.makeRemoteRequest();
+        AsyncStorage.getItem('data')
+        .then((check) => {
+            console.log(check)
+        })
     }
     makeRemoteRequest = () => {
         const { page, seed } = this.state;
