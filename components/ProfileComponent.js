@@ -16,7 +16,7 @@ export default class ProfileComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            dataUsers: []
+            dataUsers: [],
         }
     }
 
@@ -46,6 +46,7 @@ export default class ProfileComponent extends React.Component {
             });
     }
     render() {
+        console.log(this.state.email);
         return (
             <View style={styles.container}>
                 <List containerStyle = {{marginTop: 0}}>

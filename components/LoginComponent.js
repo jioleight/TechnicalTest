@@ -51,7 +51,7 @@ export default class LoginComponent extends React.Component {
     this.checkInfo();
     clearTimeout(this.waitTime);
   }
-
+  // Keyboard Hide //
   waitTime() {
     showMessage({
       message: 'Login Success!',
@@ -71,7 +71,7 @@ export default class LoginComponent extends React.Component {
   _keyboardDidHide = () => {
     this.setState({ keyboardOpen: false, displayIMG: true });
   }
-  // Validate Email Form //
+
   emailValidate(text, type) {
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (type === 'email' && text !== '') {
@@ -106,7 +106,7 @@ export default class LoginComponent extends React.Component {
       });
     }
   }
-  // Validate Password Length //
+
   passValidate(text, type) {
     if (type === 'password' && text !== '') {
       if (text.length < 6) {
@@ -140,13 +140,13 @@ export default class LoginComponent extends React.Component {
       });
     }
   }
-  // Remember Email and Password //
+
   press = () => {
     this.setState((state) => ({
       checked: !state.checked,
     }));
   }
-  // Login Function //
+
   login = () => {
     this.saveInfo();
     this.waitTime();
@@ -158,7 +158,7 @@ export default class LoginComponent extends React.Component {
       return (this.state.password)
     }
   }
-  // Save Credentials //
+
   saveInfo = async () => {
     if (!this.state.checked) {
       this.setState({
@@ -173,113 +173,115 @@ export default class LoginComponent extends React.Component {
         rememberLogin: this.state.checked,
       }
       AsyncStorage.setItem('data', JSON.stringify(data));
-    } catch(error) {
-    console.warn(error);
+    } catch (error) {
+      console.warn(error);
+    }
   }
-}
-// Check Saved Credentials //
-checkInfo = async () => {
-  try {
-    let data = await AsyncStorage.getItem('data');
-    let parsedata = JSON.parse(data)
-    if (parsedata !== null) {
-      this.setState({
-        email: parsedata.email,
-        password: parsedata.password,
-        rememberLogin: parsedata.rememberLogin,
-        checked: parsedata.rememberLogin,
-        loginValid: false,
-      })
-      if (!parsedata.rememberLogin) {
+
+  checkInfo = async () => {
+    try {
+      let data = await AsyncStorage.getItem('data');
+      let parsedata = JSON.parse(data)
+      if (parsedata !== null) {
         this.setState({
+          email: parsedata.email,
+          password: parsedata.password,
+          rememberLogin: parsedata.rememberLogin,
+          checked: parsedata.rememberLogin,
           loginValid: false,
-          email: '',
-          password: ''
         })
+        if (!parsedata.rememberLogin) {
+          this.setState({
+            loginValid: false,
+            email: '',
+            password: ''
+          })
+        } else {
+          this.setState({
+            loginValid: true,
+          })
+        }
       } else {
         this.setState({
-          loginValid: true,
-        })
+          loginValid: false,
+        });
       }
-    } else {
-      this.setState({
-        loginValid: false,
-      });
+    } catch (error) {
+      console.warn(error);
     }
-  } catch (error) {
-    console.warn(error);
   }
-}
-// Start Here //
-render() {
-  console.log(this.state.checked)
-  return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior="padding"
-      enabled>
-      <View style={styles.containerImg}>
-        <Image
-          source={require('../assets/Logo.png')}
-          style={!this.state.displayIMG ? styles.hideIMG : styles.showImg}
-        />
-      </View>
-      <View style={styles.textInputContainer}>
-        <TextField
-          ref={input => { this.textInput = input }}
-          value={this.valueTextField('email')}
-          keyboardType='email-address'
-          autoCorrect={false}
-          autoCapitalize='none'
-          onSubmitEditing={() => this.passwordInput.focus()}
-          onChangeText={
-            (text) => this.emailValidate(text, 'email')
-          }
-          onFocus={() => this.setState({ displayIMG: false })}
-          label='Email Address'
-          returnKeyType='next'
-          error={!this.state.emailValid ? this.state.emailERR : null}
-        />
 
-        <TextField
-          ref={(input) => this.passwordInput = input}
-          value={this.valueTextField('password')}
-          autoCorrect={false}
-          autoCapitalize='none'
-          secureTextEntry={true}
-          onChangeText={(text) => this.passValidate(text, 'password')}
-          label='Password'
-          returnKeyType='go'
-          error={!this.state.passwordValid ? this.state.passERR : null}
+  render() {
+    console.log(this.state.checked)
+    return (
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior="padding"
+        enabled>
+        <View style={styles.containerImg}>
+          <Image
+            source={require('../assets/Logo.png')}
+            style={!this.state.displayIMG ? styles.hideIMG : styles.showImg}
+          />
+        </View>
+        <View style={styles.textInputContainer}>
+          <TextField
+            ref={input => { this.textInput = input }}
+            value={this.valueTextField('email')}
+            keyboardType='email-address'
+            autoCorrect={false}
+            autoCapitalize='none'
+            onSubmitEditing={() => this.passwordInput.focus()}
+            onChangeText={
+              (text) => this.emailValidate(text, 'email')
+            }
+            onFocus={() => this.setState({ displayIMG: false })}
+            label='Email Address'
+            returnKeyType='next'
+            underlineColorAndroid="transparent"
+            error={!this.state.emailValid ? this.state.emailERR : null}
+          />
+
+          <TextField
+            ref={(input) => this.passwordInput = input}
+            value={this.valueTextField('password')}
+            autoCorrect={false}
+            autoCapitalize='none'
+            secureTextEntry={true}
+            onChangeText={(text) => this.passValidate(text, 'password')}
+            label='Password'
+            returnKeyType='go'
+            error={!this.state.passwordValid ? this.state.passERR : null}
+          />
+          <CheckBox
+            containerStyle={styles.checkboxStyle}
+            title='Remember Email & Password'
+            onPress={this.press}
+            size={30}
+            iconType='ionicon'
+            checkedIcon='ios-checkmark-circle'
+            uncheckedIcon='ios-checkmark-circle-outline'
+            checked={this.state.checked}
+          />
+          <TouchableOpacity
+            disabled={!this.state.loginValid ? true : false}
+            style={[
+              styles.button,
+              !this.state.loginValid ? styles.buttonStyle : null
+            ]}
+            onPress={this.login}>
+            <Text style={styles.buttonText}>Sign In</Text>
+          </TouchableOpacity>
+        </View>
+        <FlashMessage
+          floating={true}
+          icon='auto'
+          style={{ alignItems: 'center' }}
+          hideOnPress={false}
         />
-        <CheckBox
-          containerStyle={styles.checkboxStyle}
-          title='Remember Email & Password'
-          onPress={this.press}
-          iconType='material-community'
-          checkedIcon='checkbox-marked'
-          uncheckedIcon='checkbox-blank-outline'
-          checked={this.state.checked}
-        />
-        <TouchableOpacity
-          disabled={!this.state.loginValid ? true : false}
-          style={[
-            styles.button,
-            !this.state.loginValid ? styles.buttonStyle : null
-          ]}
-          onPress={this.login}>
-          <Text style={styles.buttonText}>Sign In</Text>
-        </TouchableOpacity>
-      </View>
-      <FlashMessage
-        floating={true}
-        icon='auto'
-        style={{ alignItems: 'center' }}
-        hideOnPress={false}
-      />
-    </KeyboardAvoidingView>
-  );
-}
+      </KeyboardAvoidingView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -312,9 +314,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textInputContainer: {
-    width: wp('80%'),
+    padding: 30,
+    width: wp('100%'),
     height: hp('40%'),
-    backgroundColor: '#fff',
     marginBottom: hp('10%'),
     flex: 0,
     justifyContent: 'center',
@@ -322,7 +324,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#714db2',
     alignItems: 'center',
-    borderRadius: 5,
+    borderRadius: 20,
     marginTop: 10,
   },
   buttonText: {
