@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {  
   StyleSheet, 
   Text, 
@@ -9,10 +9,7 @@ import {
   AsyncStorage,
   TouchableOpacity,
 } from 'react-native';
-import { createStackNavigator } from 'react-navigation';
 import { CheckBox} from 'react-native-elements';
-import FlashMessage from 'react-native-flash-message';
-import { showMessage } from 'react-native-flash-message';
 import {  
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -36,9 +33,16 @@ export default class LoginComponent extends React.Component {
       loginValid: false,
       displayIMG: true,
       keyboardOpen: false,
+      loading: false,
+      dataUsers: [],
+      page: 1,
+      seed: 1,
+      error: null,
+      refreshing: false
     }
   }
   componentDidMount() {
+    this.makeRemoteRequest();
     this.checkInfo();
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
@@ -158,6 +162,28 @@ export default class LoginComponent extends React.Component {
     }
     this.props.navigation.navigate('Profile');
   }
+  makeRemoteRequest = () => {
+    const { page, seed} = this.state;
+    const url = 'https://randomuser.me/api/?seed=${seed}&page=${page}&results=20';
+    this.setState({ loading: true });
+    fetch(url)
+      .then( res => res.json() )
+      .then( res => {
+        this.setState({
+          dataUsers: page === 1 ? res.results : [...this.state.dataUsers, ...res.results],
+          error: res.error || null,
+          loading: false,
+          refresh: false
+        });
+      })
+      .catch( error => {
+        this.setState({ error, loading: false });
+      });
+    console.log(this.state.dataUsers);
+  }
+  dataStored = async () => {
+    
+  }
   // Save Credentials //
   saveInfo = async () => { 
     if (this.state.email !== '' && this.state.password !=='') { 
@@ -180,7 +206,7 @@ export default class LoginComponent extends React.Component {
           dataValid: true,
           loginValid: true,
         });
-        console.log(this.state.emailValue);
+        console.log(parsedata);
       } else { 
         this.setState({
           dataValid: false,
