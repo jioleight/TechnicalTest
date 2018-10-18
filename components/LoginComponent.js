@@ -27,9 +27,6 @@ export default class LoginComponent extends React.Component {
       password: '',
       emailERR: ' ',
       passERR: ' ',
-      emailValue: '',
-      passwordValue: '',
-      dataValid: false,
       checked: false,
       rememberLogin: false,
       emailValid: true,
@@ -37,8 +34,6 @@ export default class LoginComponent extends React.Component {
       loginValid: false,
       displayIMG: true,
       keyboardOpen: false,
-      loading: false,
-      dataUsers: [],
     }
   }
   componentDidMount() {
@@ -48,22 +43,26 @@ export default class LoginComponent extends React.Component {
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
   }
 
+  componentWillMount() {
+    this.checkInfo();
+  }
+
   componentWillUnmount() {
+    this.checkInfo();
     clearTimeout(this.waitTime);
   }
 
   waitTime() {
     showMessage({
       message: 'Login Success!',
-      description: 'Welcome ' + this.state.emailValue,
+      description: 'Welcome ' + this.state.email,
       type: 'success',
       position: 'center'
     })
     setTimeout(() => {
       this.props.navigation.navigate('Profile');
-    }, 3500)
+    }, 1500)
   }
-
 
   _keyboardDidShow = () => {
     this.setState({ keyboardOpen: true, displayIMG: false });
@@ -75,9 +74,6 @@ export default class LoginComponent extends React.Component {
   // Validate Email Form //
   emailValidate(text, type) {
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    this.setState({
-      dataValid: false,
-    })
     if (type === 'email' && text !== '') {
       if (reg.test(text)) {
         this.setState({
@@ -112,9 +108,6 @@ export default class LoginComponent extends React.Component {
   }
   // Validate Password Length //
   passValidate(text, type) {
-    this.setState({
-      dataValid: false,
-    })
     if (type === 'password' && text !== '') {
       if (text.length < 6) {
         this.setState({
@@ -155,55 +148,34 @@ export default class LoginComponent extends React.Component {
   }
   // Login Function //
   login = () => {
-    if (!this.state.checked) {
-      this.setState({
-        email: '',
-        password: '',
-        loginValid: true,
-        dataValid: true,
-      });
-    } else {
-      this.saveInfo();
-      this.setState({
-        email: '',
-        password: '',
-        loginValid: false,
-        dataValid: false,
-      });
-      this.textInput.clear();
-      this.passwordInput.clear();
-    }
+    this.saveInfo();
     this.waitTime();
   }
   valueTextField(type) {
     if (type === 'email') {
-      if (this.state.dataValid) {
-        if (!this.state.checked) {
-          return (this.state.email)
-        } else {
-          return (this.state.emailValue)
-        }
-      }
+      return (this.state.email)
     } else {
-      if (this.state.dataValid) {
-        if (!this.state.checked) {
-          return (this.state.password)
-        } else {
-          return (this.state.passwordValue)
-        }
-      }
+      return (this.state.password)
     }
   }
-
-// Save Credentials //
-saveInfo = async () => {
-  let data = {
-    email: this.state.email,
-    password: this.state.password,
-    rememberLogin: this.state.checked,
+  // Save Credentials //
+  saveInfo = async () => {
+    if (!this.state.checked) {
+      this.setState({
+        email: '',
+        password: ''
+      })
+    }
+    try {
+      let data = {
+        email: this.state.email,
+        password: this.state.password,
+        rememberLogin: this.state.checked,
+      }
+      AsyncStorage.setItem('data', JSON.stringify(data));
+    } catch(error) {
+    console.warn(error);
   }
-  AsyncStorage.setItem('data', JSON.stringify(data));
-  console.log(this.state.checked);
 }
 // Check Saved Credentials //
 checkInfo = async () => {
@@ -211,30 +183,36 @@ checkInfo = async () => {
     let data = await AsyncStorage.getItem('data');
     let parsedata = JSON.parse(data)
     if (parsedata !== null) {
-      if (parsedata.rememberLogin) {
+      this.setState({
+        email: parsedata.email,
+        password: parsedata.password,
+        rememberLogin: parsedata.rememberLogin,
+        checked: parsedata.rememberLogin,
+        loginValid: false,
+      })
+      if (!parsedata.rememberLogin) {
         this.setState({
-          emailValue: parsedata.email,
-          passwordValue: parsedata.password,
-          checked: parsedata.rememberLogin,
+          loginValid: false,
+          email: '',
+          password: ''
+        })
+      } else {
+        this.setState({
           loginValid: true,
-          dataValid: true,
-        });
+        })
       }
     } else {
       this.setState({
-        dataValid: false,
         loginValid: false,
       });
     }
   } catch (error) {
     console.warn(error);
   }
-  this.forceUpdate();
-  console.log('remember: ',this.state.rememberLogin)
-  console.log('valid: ', this.state.dataValid)
 }
 // Start Here //
 render() {
+  console.log(this.state.checked)
   return (
     <KeyboardAvoidingView
       style={styles.container}
