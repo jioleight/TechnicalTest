@@ -1,25 +1,26 @@
 import React, { Component } from 'react';
-import {  
-  StyleSheet, 
-  Text, 
-  View, 
-  Image, 
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
   Keyboard,
-  KeyboardAvoidingView, 
+  KeyboardAvoidingView,
   AsyncStorage,
   TouchableOpacity,
+  FlatList
 } from 'react-native';
-import { CheckBox} from 'react-native-elements';
-import {  
+import { CheckBox, List, ListItem } from 'react-native-elements';
+import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import { TextField } from 'react-native-material-textfield';
 
-export default class LoginComponent extends React.Component { 
-  constructor(props) { 
+export default class LoginComponent extends React.Component {
+  constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       email: '',
       password: '',
       emailERR: ' ',
@@ -35,57 +36,52 @@ export default class LoginComponent extends React.Component {
       keyboardOpen: false,
       loading: false,
       dataUsers: [],
-      page: 1,
-      seed: 1,
-      error: null,
-      refreshing: false
     }
   }
   componentDidMount() {
-    this.makeRemoteRequest();
     this.checkInfo();
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
   }
 
   _keyboardDidShow = () => {
-    this.setState({keyboardOpen: true, displayIMG: false});
+    this.setState({ keyboardOpen: true, displayIMG: false });
   }
 
   _keyboardDidHide = () => {
-    this.setState({keyboardOpen: false, displayIMG: true});
+    this.setState({ keyboardOpen: false, displayIMG: true });
   }
   // Validate Email Form //
-  emailValidate(text, type) { 
+  emailValidate(text, type) {
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     this.setState({
       dataValid: false,
     })
-    if (type === 'email' && text !== '') { 
-      if (reg.test(text)) { 
+    if (type === 'email' && text !== '') {
+      if (reg.test(text)) {
         this.setState({
           email: text,
           emailERR: ' ',
           emailValid: true,
         });
         if (
-            this.state.password === '' || 
-            this.state.password.length === 0 ||
-            !this.state.passwordValid
-        ) { 
-          this.setState({loginValid: false });
-        } else { 
-          this.setState({loginValid: true });
+          this.state.password === '' ||
+          this.state.password.length === 0 ||
+          !this.state.passwordValid
+        ) {
+          this.setState({ loginValid: false });
+        } else {
+          this.setState({ loginValid: true });
         }
-      } else { 
-          this.setState({
-            email: text,
-            emailERR: 'Incorrect email format ',
-            emailValid: false,
-            loginValid: false
-          });
+      } else {
+        this.setState({
+          email: text,
+          emailERR: 'Incorrect email format ',
+          emailValid: false,
+          loginValid: false
+        });
       }
-    } else { 
+    } else {
       this.setState({
         email: text,
         emailERR: ' ',
@@ -94,19 +90,19 @@ export default class LoginComponent extends React.Component {
     }
   }
   // Validate Password Length //
-  passValidate(text, type) { 
+  passValidate(text, type) {
     this.setState({
       dataValid: false,
     })
-    if (type === 'password' && text !== '' ) { 
-      if (text.length < 6) { 
+    if (type === 'password' && text !== '') {
+      if (text.length < 6) {
         this.setState({
           password: text,
           passERR: 'Password length must be 6 - 12 characters',
           passwordValid: false,
           loginValid: false
         });
-      } else { 
+      } else {
         this.setState({
           password: text,
           passERR: ' ',
@@ -116,30 +112,30 @@ export default class LoginComponent extends React.Component {
           this.state.email === '' &&
           this.state.password.length !== 0 ||
           !this.state.emailValid
-        ) { 
+        ) {
           this.setState({ loginValid: false });
-        } else { 
+        } else {
           this.setState({ loginValid: true });
         }
       }
-    } else { 
+    } else {
       this.setState({
         password: text,
         passERR: ' ',
         passwordValid: true,
       });
-    } 
+    }
   }
   // Remember Email and Password //
-  press = () => { 
+  press = () => {
     this.setState((state) => ({
       checked: !state.checked,
     }));
     console.log(this.state.checked);
   }
   // Login Function //
-  login = () => { 
-    if (this.state.checked) { 
+  login = () => {
+    if (this.state.checked) {
       this.saveInfo();
       this.setState({
         email: '',
@@ -148,7 +144,7 @@ export default class LoginComponent extends React.Component {
         checked: true,
         dataValid: true,
       });
-    } else { 
+    } else {
       this.textInput.focus();
       this.setState({
         email: '',
@@ -162,32 +158,10 @@ export default class LoginComponent extends React.Component {
     }
     this.props.navigation.navigate('Profile');
   }
-  makeRemoteRequest = () => {
-    const { page, seed} = this.state;
-    const url = 'https://randomuser.me/api/?seed=${seed}&page=${page}&results=20';
-    this.setState({ loading: true });
-    fetch(url)
-      .then( res => res.json() )
-      .then( res => {
-        this.setState({
-          dataUsers: page === 1 ? res.results : [...this.state.dataUsers, ...res.results],
-          error: res.error || null,
-          loading: false,
-          refresh: false
-        });
-      })
-      .catch( error => {
-        this.setState({ error, loading: false });
-      });
-    console.log(this.state.dataUsers);
-  }
-  dataStored = async () => {
-    
-  }
   // Save Credentials //
-  saveInfo = async () => { 
-    if (this.state.email !== '' && this.state.password !=='') { 
-      let data = { 
+  saveInfo = async () => {
+    if (this.state.email !== '' && this.state.password !== '') {
+      let data = {
         email: this.state.email,
         password: this.state.password
       }
@@ -195,86 +169,86 @@ export default class LoginComponent extends React.Component {
     }
   }
   // Check Saved Credentials //
-  checkInfo = async () => { 
-    try{
+  checkInfo = async () => {
+    try {
       let data = await AsyncStorage.getItem('data');
       let parsedata = JSON.parse(data)
-      if (parsedata !== null) { 
+      if (parsedata !== null) {
         this.setState({
           emailValue: parsedata.email,
           passwordValue: parsedata.password,
           dataValid: true,
           loginValid: true,
         });
-        console.log(parsedata);
-      } else { 
+        console.info('Check success!')
+      } else {
         this.setState({
           dataValid: false,
         });
       }
-    } catch (error) { 
+    } catch (error) {
       console.warn(error);
     }
     this.forceUpdate();
   }
   // Start Here //
-  render() { 
+  render() {
     return (
-      <KeyboardAvoidingView 
-        style = { styles.container } 
-        behavior = "padding" 
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior="padding"
         enabled>
-        <View style = { styles.containerImg }>
+        <View style={styles.containerImg}>
           <Image 
             source = { require('../assets/Logo.png') } 
             style={ !this.state.displayIMG? styles.hideIMG:styles.showImg }
           />
         </View>
-        <View style = { styles.textInputContainer }>
+        <View style={styles.textInputContainer}>
           <TextField
-            ref = { input => { this.textInput = input}}
-            value = { !this.state.dataValid? this.state.email:this.state.emailValue }
-            keyboardType = 'email-address'
-            autoCorrect = {false}
-            autoCapitalize = 'none'
-            onSubmitEditing = { () => this.passwordInput.focus() }
-            onChangeText = { 
-              (text) => this.emailValidate(text, 'email') 
+            ref={input => { this.textInput = input }}
+            value={!this.state.dataValid ? this.state.email : this.state.emailValue}
+            keyboardType='email-address'
+            autoCorrect={false}
+            autoCapitalize='none'
+            onSubmitEditing={() => this.passwordInput.focus()}
+            onChangeText={
+              (text) => this.emailValidate(text, 'email')
             }
-            onFocus = { () => this.setState({ displayIMG: true })}
-            label = 'Email Address'
-            returnKeyType = 'next'
-            error = { !this.state.emailValid? this.state.emailERR : null }
+            onFocus={() => this.setState({ displayIMG: true })}
+            label='Email Address'
+            returnKeyType='next'
+            error={!this.state.emailValid ? this.state.emailERR : null}
           />
-          
+
           <TextField
-            ref = { (input) => this.passwordInput = input }
-            value = { !this.state.dataValid? this.state.password:this.state.passwordValue }
-            autoCorrect = {false}
-            autoCapitalize = 'none'
-            secureTextEntry = {true}
-            onChangeText = { (text) => this.passValidate(text, 'password') }
-            label = 'Password'
-            returnKeyType = 'go'
-            error = { !this.state.passwordValid? this.state.passERR : null }
+            ref={(input) => this.passwordInput = input}
+            value={!this.state.dataValid ? this.state.password : this.state.passwordValue}
+            autoCorrect={false}
+            autoCapitalize='none'
+            secureTextEntry={true}
+            onChangeText={(text) => this.passValidate(text, 'password')}
+            label='Password'
+            returnKeyType='go'
+            error={!this.state.passwordValid ? this.state.passERR : null}
           />
           <CheckBox
-            containerStyle = { styles.checkboxStyle }
-            title = 'Remember Email & Password'
-            onPress = { this.press }
-            iconType = 'material-community'
-            checkedIcon = 'checkbox-marked'
-            uncheckedIcon = 'checkbox-blank-outline'
-            checked = { this.state.checked }
+            containerStyle={styles.checkboxStyle}
+            title='Remember Email & Password'
+            onPress={this.press}
+            iconType='material-community'
+            checkedIcon='checkbox-marked'
+            uncheckedIcon='checkbox-blank-outline'
+            checked={this.state.checked}
           />
           <TouchableOpacity
-            disabled = { !this.state.loginValid? true:false }
-            style = {[
-              styles.button, 
-              !this.state.loginValid? styles.buttonStyle:null
+            disabled={!this.state.loginValid ? true : false}
+            style={[
+              styles.button,
+              !this.state.loginValid ? styles.buttonStyle : null
             ]}
-            onPress = { this.login }>
-              <Text style = { styles.buttonText }>Sign In</Text>  
+            onPress={this.login}>
+            <Text style={styles.buttonText}>Sign In</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -283,7 +257,7 @@ export default class LoginComponent extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: { 
+  container: {
     flex: 1,
     flexDirection: 'column',
     backgroundColor: '#fff',
@@ -292,49 +266,49 @@ const styles = StyleSheet.create({
     height: hp('100%'),
     width: wp('100%')
   },
-  showImg: { 
-    resizeMode:'contain',
+  showImg: {
+    resizeMode: 'contain',
     width: '70%',
     height: '70%',
     alignItems: 'center'
   },
   hideIMG: {
-    resizeMode:'contain',
+    resizeMode: 'contain',
     width: 0,
     height: 0,
   },
-  containerImg: { 
+  containerImg: {
     width: wp('100%%'),
     height: hp('60%'),
-    flex: 1, 
+    flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
-  textInputContainer: { 
+  textInputContainer: {
     width: wp('80%'),
     height: hp('40%'),
     backgroundColor: '#fff',
-    marginBottom: hp('10%'), 
+    marginBottom: hp('10%'),
     flex: 0,
     justifyContent: 'flex-end',
   },
-  button: { 
+  button: {
     backgroundColor: '#714db2',
-    alignItems:'center',
+    alignItems: 'center',
     borderRadius: 5,
     marginTop: 10,
   },
-  buttonText: { 
-    color:'#fff', 
-    height: 40, 
-    padding: 10, 
-    fontWeight:'bold', 
+  buttonText: {
+    color: '#fff',
+    height: 40,
+    padding: 10,
+    fontWeight: 'bold',
     fontSize: 14
   },
-  buttonStyle: { 
+  buttonStyle: {
     opacity: 0.4
   },
-  checkboxStyle: { 
+  checkboxStyle: {
     backgroundColor: 'transparent',
     marginVertical: 5,
     height: 40,
