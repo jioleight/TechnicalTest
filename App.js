@@ -21,7 +21,6 @@ const Application = createStackNavigator({
     screen: ProfileComponent,
     navigationOptions: ({ navigation }) => ({
       title: 'List of users',
-      
     }),
   },
 });
