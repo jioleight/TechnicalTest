@@ -11,8 +11,8 @@ import {
 
 export default class SplashComponent extends React.Component {
     componentWillMount() {
-        setInterval(() =>{
-            this.props.navigation.navigate('Profile');
+        setTimeout(() =>{
+            this.props.navigation.navigate('Home');
         }, 1000)
     }
     render() {
