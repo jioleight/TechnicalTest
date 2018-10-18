@@ -8,9 +8,10 @@ import {
   KeyboardAvoidingView,
   AsyncStorage,
   TouchableOpacity,
-  FlatList
 } from 'react-native';
-import { CheckBox, List, ListItem } from 'react-native-elements';
+import { CheckBox } from 'react-native-elements';
+import FlashMessage from 'react-native-flash-message';
+import { showMessage } from 'react-native-flash-message';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -156,6 +157,11 @@ export default class LoginComponent extends React.Component {
       this.textInput.clear();
       this.passwordInput.clear();
     }
+    showMessage({
+        message: 'Login Successful!',
+        type: 'success',
+        position: 'center',
+    });
     this.props.navigation.navigate('Profile');
   }
   // Save Credentials //
@@ -251,6 +257,12 @@ export default class LoginComponent extends React.Component {
             <Text style={styles.buttonText}>Sign In</Text>
           </TouchableOpacity>
         </View>
+        <FlashMessage
+          floating={true}
+          icon='auto'
+          style={{ alignItems: 'center' }}
+          hideOnPress={false}
+        />
       </KeyboardAvoidingView>
     );
   }

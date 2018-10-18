@@ -6,9 +6,14 @@ import ProfileComponent from './components/ProfileComponent';
 
 const Application = createStackNavigator({
   /* Splash: { screen: SplashComponent}, */
-  Home: { screen: LoginComponent },
-  Profile: { screen: ProfileComponent},
-  }, {
+  Home: { 
+    screen: LoginComponent 
+    },
+  Profile: { 
+    screen: ProfileComponent
+    },
+  }, 
+        {
     navigationOptions: {
       header: null,
     }
