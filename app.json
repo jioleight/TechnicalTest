@@ -9,13 +9,11 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon_TT.png",
-    "splash": {
-      "image": "./assets/Logo.png",
+    /* "splash": {
+      "image": "./assets/icon_TT.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff",
-      "wdith": "80%",
-      "heigth": "80%"
-    },
+    }, */
     "updates": {
       "fallbackToCacheTimeout": 0
     },
