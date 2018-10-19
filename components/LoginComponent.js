@@ -151,19 +151,13 @@ export default class LoginComponent extends React.Component {
     this.saveInfo();
     this.waitTime();
   }
-  valueTextField(type) {
-    if (type === 'email') {
-      return (this.state.email)
-    } else {
-      return (this.state.password)
-    }
-  }
-
+  
   saveInfo = async () => {
     if (!this.state.checked) {
       this.setState({
         email: '',
-        password: ''
+        password: '',
+        loginValid: false
       })
     }
     try {
@@ -227,7 +221,7 @@ export default class LoginComponent extends React.Component {
         <View style={styles.textInputContainer}>
           <TextField
             ref={input => { this.textInput = input }}
-            value={this.valueTextField('email')}
+            value={this.state.email}
             keyboardType='email-address'
             autoCorrect={false}
             autoCapitalize='none'
@@ -244,7 +238,7 @@ export default class LoginComponent extends React.Component {
 
           <TextField
             ref={(input) => this.passwordInput = input}
-            value={this.valueTextField('password')}
+            value={this.state.password}
             autoCorrect={false}
             autoCapitalize='none'
             secureTextEntry={true}
