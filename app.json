@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "VTT",
+    "name": "Technical Test",
     "description": "This project is really great.",
     "slug": "VTT",
     "privacy": "public",
@@ -9,11 +9,13 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon_TT.png",
-    /*"splash": {
-      "image": "",
+    "splash": {
+      "image": "./assets/Logo.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },*/
+      "backgroundColor": "#ffffff",
+      "wdith": "80%",
+      "heigth": "80%"
+    },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
