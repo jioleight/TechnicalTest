@@ -51,7 +51,6 @@ export default class LoginComponent extends React.Component {
     this.checkInfo();
     clearTimeout(this.waitTime);
   }
-  // Keyboard Hide //
   waitTime() {
     showMessage({
       message: 'Login Success!',
@@ -151,7 +150,7 @@ export default class LoginComponent extends React.Component {
     this.saveInfo();
     this.waitTime();
   }
-  
+
   saveInfo = async () => {
     if (!this.state.checked) {
       this.setState({
