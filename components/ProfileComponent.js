@@ -79,29 +79,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         justifyContent: 'flex-start'
     },
-    headerContainer: {
-        flex: 0,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'stretch',
-        marginTop: 10
-    },
     userContainer: {
         flex: 1,
         justifyContent: 'flex-start',
         height: hp('100%'),
         width: wp('100%'),
     },
-    logoutButton: {
-        padding: 5,
-        alignItems: 'center',
-        backgroundColor: '#5cb85c',
-        borderWidth: 1,
-        borderColor: 'transparent',
-        borderRadius: 10,
-    },
-    textTitle: {
-        fontSize: 25,
-        fontWeight: 'bold',
-    }
 });
